@@ -1,17 +1,11 @@
 # iot-based-attendance-system
 
-Team
+## 😎 Team
+- Mahmoud Kheyrati Fard
 - Yasin Rezaei
-- Hosein Mirhoseini
-- Yeganeh Khajehpour
+- Alireza Lotfi
 
-## ✨ Features
 
-- Easy medical test
-- Booking doctor appointment
-- Chatting with doctors
-- Reliable test result
-- Medical facts
 
 ## 🔧 Implementation
 - Kotlin
