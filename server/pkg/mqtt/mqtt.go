@@ -14,13 +14,23 @@ const (
 	ExactlyOnce = 2
 )
 
-func NewMqttClient(host string, port int, clientId string, keepAliveSec int, pingTimeoutSec int) (mqtt.Client, error) {
+type Config struct {
+	Host           string
+	Port           int
+	ClientId       string
+	Username       string
+	Password       string
+	KeepAliveSec   int
+	PingTimeoutSec int
+}
+
+func NewMqttClient(config Config) (mqtt.Client, error) {
 	//mqtt.DEBUG = log.New(os.Stdout, "--------------", 0)
 	mqtt.ERROR = log.New(os.Stdout, "", 0)
-	opts := mqtt.NewClientOptions().AddBroker(fmt.Sprintf("tcp://%s:%d", host, port)).
-		SetClientID(clientId).
-		SetKeepAlive(time.Duration(keepAliveSec) * time.Second).
-		SetPingTimeout(time.Duration(pingTimeoutSec) * time.Second)
+	opts := mqtt.NewClientOptions().AddBroker(fmt.Sprintf("tcp://%s:%d", config.Host, config.Port)).
+		SetClientID(config.ClientId).
+		SetKeepAlive(time.Duration(config.KeepAliveSec) * time.Second).
+		SetPingTimeout(time.Duration(config.PingTimeoutSec) * time.Second)
 
 	client := mqtt.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
