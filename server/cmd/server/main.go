@@ -1,8 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"server/config"
+)
 
 func main() {
+	c := config.NewConfig()
 
-	fmt.Println("server ")
+	fmt.Printf("config: %+v", c)
+
 }

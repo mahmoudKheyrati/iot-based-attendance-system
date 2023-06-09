@@ -1,0 +1,15 @@
+scylla:
+  host: localhost
+  port: 9042
+  username: cassandra
+  password: cassandra
+  default_keyspace: attendance
+
+mqtt_broker:
+  host: localhost
+  port: 1883
+  client_id: server-client-id
+  username: username
+  password: password
+  keepalive_sec: 10
+  ping_timeout_sec:  20
