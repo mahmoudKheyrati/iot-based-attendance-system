@@ -3,13 +3,13 @@ FROM golang:1.20 as builder
 RUN mkdir -p /application
 RUN mkdir /build
 WORKDIR /application
-COPY server ./
+COPY ./ ./
 RUN go build -trimpath -mod=vendor -a -ldflags '-s -w'  -o /build/cli ./cmd/cli/main.go
 
 
-FROM golang:1.20
+FROM alpine
 RUN mkdir -p /application
 WORKDIR /application
-COPY --from=builder /build/server ./server
+COPY --from=builder /build/cli ./
 ENTRYPOINT ["./cli"]
 
