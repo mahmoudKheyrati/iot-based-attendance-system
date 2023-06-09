@@ -23,7 +23,7 @@ type ScyllaConfig struct {
 }
 type MqttBrokerConfig struct {
 	Host           string
-	Port           string
+	Port           int
 	ClientId       string
 	Username       string
 	Password       string
@@ -60,7 +60,7 @@ func NewConfig() *Config {
 			},
 			MqttBrokerConfig: MqttBrokerConfig{
 				Host:           viper.GetString("mqtt_broker.host"),
-				Port:           viper.GetString("mqtt_broker.port"),
+				Port:           viper.GetInt("mqtt_broker.port"),
 				ClientId:       viper.GetString("mqtt_broker.client_id"),
 				Username:       viper.GetString("mqtt_broker.username"),
 				Password:       viper.GetString("mqtt_broker.password"),
