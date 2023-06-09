@@ -2,11 +2,11 @@
 
 ## payload types: 
 ### receive payload from arduino: 
-- topic=attempts message_format=``employee-enter-card: {TIMESTAMP} {USER_ID} {CA_CERT}``
-- topic=lock_status_changed message_format= ``timestamp: {TIMESTAMP} state={CLOSE, OPEN} ``
-- topic=admin-command-response message_format= ``timestamp: {TIMESTAMP} state={CLOSE, OPEN}``
+- when an employee put his RFID card on the sensor, the arduino send message to topic=request message_format=``{TIMESTAMP},{USER_ID},{CA_CERT}``
+- when lock state changes the arduino send message to topic=lock_status_changed message_format= ``{TIMESTAMP},{CLOSE, OPEN}``
+- when the arduino receives admin command then send the lock state in topic=admin-command-response message_format= ``{TIMESTAMP},{CLOSE, OPEN}``
+- the current state of the lock sends to the topic=lock-state message_format=``{TIMESTAMP},{OPEN, CLOSE}``
 
 ### send payload to arduino by server: 
-- topic=admin_commands message_format=``action: open-lock``
-- topic=admin_commands message_format=``action: close-lock``
-- topic={user_id} message_format=``employee-enter-card: action={OPEN,CLOSE}, new_cert={CERT}``
+- topic=admin-command message_format=``{TIMESTAMP},{OPEN, CLOSE}``
+- topic=response-{user_id} message_format=``{TIMESTAMP},{OPEN,CLOSE},{CERT}``

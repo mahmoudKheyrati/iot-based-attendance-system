@@ -2,9 +2,13 @@ package main
 
 import (
 	"fmt"
+	"github.com/eclipse/paho.mqtt.golang"
+	"os"
+	"os/signal"
 	"server/config"
 	mqtt2 "server/pkg/mqtt"
 	"server/pkg/scylla"
+	"time"
 )
 
 func main() {
@@ -33,8 +37,38 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	var topicNames = c.TopicNames
+	mqttClient.Subscribe(topicNames.Request, mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+
+	})
+	mqttClient.Subscribe(topicNames.LockStatusChanged, mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+
+	})
+	mqttClient.Subscribe(topicNames.AdminCommandResponse, mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+
+	})
+
+	mqttClient.Subscribe(topicNames.LockState, mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+
+	})
+
+	//mqttClient.Publish(topicNames.AdminCommand, mqtt2.ExactlyOnce, false, "")
+	//mqttClient.Publish(fmt.Sprintf("%s-%s", topicNames.Response, "USER_ID"), mqtt2.ExactlyOnce, false, "")
 
 	fmt.Println(mqttClient)
 	fmt.Println(session)
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+	<-quit
+	fmt.Println("gracefully shutdown ...")
+	//ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	//defer cancel()
+	mqttClient.Disconnect(250)
+	session.Close()
+	time.Sleep(3 * time.Second)
+	//if err := srv.Shutdown(ctx); err != nil {
+	//	log.Fatal(err)
+	//}
 
 }

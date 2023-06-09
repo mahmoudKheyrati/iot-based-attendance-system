@@ -1,3 +1,12 @@
+topic_names:
+  request: "request"
+  lock_status_changed: "lock_status_changed"
+  admin_command_response: "admin_command_response"
+  lock_state: "lock_state"
+  admin_command: "admin_command"
+  response: "response"
+
+
 scylla:
   host: localhost
   port: 9042

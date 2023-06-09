@@ -10,10 +10,18 @@ import (
 )
 
 type Config struct {
+	TopicNames       TopicNames
 	ScyllaConfig     ScyllaConfig
 	MqttBrokerConfig MqttBrokerConfig
 }
-
+type TopicNames struct {
+	Request              string
+	LockStatusChanged    string
+	AdminCommandResponse string
+	LockState            string
+	AdminCommand         string
+	Response             string
+}
 type ScyllaConfig struct {
 	Host            string
 	Port            int
@@ -51,6 +59,14 @@ func NewConfig() *Config {
 		}
 
 		config = &Config{
+			TopicNames: TopicNames{
+				Request:              viper.GetString("topic_names.request"),
+				LockStatusChanged:    viper.GetString("topic_names.lock_status_changed"),
+				AdminCommandResponse: viper.GetString("topic_names.admin_command_response"),
+				LockState:            viper.GetString("topic_names.lock_state"),
+				AdminCommand:         viper.GetString("topic_names.admin_command"),
+				Response:             viper.GetString("topic_names.response"),
+			},
 			ScyllaConfig: ScyllaConfig{
 				Host:            viper.GetString("scylla.host"),
 				Port:            viper.GetInt("scylla.port"),
