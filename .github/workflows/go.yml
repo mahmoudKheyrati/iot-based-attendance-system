@@ -22,10 +22,10 @@ jobs:
         go-version: 1.20
 
     - name: Build server
-      run: go build ../../server/cmd/server
+      run: go build ./...
       
-    - name: Build Cli 
-      run:  go build ../../server/cmd/cli
+#     - name: Build Cli 
+#       run:  go build ../../server/cmd/cli
     
 #     - name: Test
 #       run: go test -v ./...
