@@ -18,7 +18,7 @@ type ScyllaConfig struct {
 	Host            string
 	Port            int
 	Username        string
-	password        string
+	Password        string
 	DefaultKeyspace string
 }
 type MqttBrokerConfig struct {
@@ -55,7 +55,7 @@ func NewConfig() *Config {
 				Host:            viper.GetString("scylla.host"),
 				Port:            viper.GetInt("scylla.port"),
 				Username:        viper.GetString("scylla.username"),
-				password:        viper.GetString("scylla.password"),
+				Password:        viper.GetString("scylla.password"),
 				DefaultKeyspace: viper.GetString("scylla.default_keyspace"),
 			},
 			MqttBrokerConfig: MqttBrokerConfig{

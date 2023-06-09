@@ -6,13 +6,21 @@ import (
 	"github.com/scylladb/gocqlx/v2"
 )
 
-func NewScyllaSession(host string, port int, defaultKeyspace, username, password string) (gocqlx.Session, error) {
-	cluster := gocql.NewCluster(fmt.Sprintf("%s:%d", host, port))
-	cluster.Keyspace = defaultKeyspace
+type Config struct {
+	Host            string
+	Port            int
+	Username        string
+	Password        string
+	DefaultKeyspace string
+}
+
+func NewScyllaSession(config Config) (gocqlx.Session, error) {
+	cluster := gocql.NewCluster(fmt.Sprintf("%s:%d", config.Host, config.Port))
+	cluster.Keyspace = config.DefaultKeyspace
 	cluster.AuthProvider = func(h *gocql.HostInfo) (gocql.Authenticator, error) {
 		return gocql.PasswordAuthenticator{
-			Username: username,
-			Password: password,
+			Username: config.Username,
+			Password: config.Password,
 		}, nil
 	}
 	session, err := gocqlx.WrapSession(cluster.CreateSession())

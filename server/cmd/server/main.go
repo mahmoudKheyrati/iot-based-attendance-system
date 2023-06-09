@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"server/config"
 	mqtt2 "server/pkg/mqtt"
+	"server/pkg/scylla"
 )
 
 func main() {
@@ -22,6 +23,18 @@ func main() {
 		panic(err)
 	}
 
+	session, err := scylla.NewScyllaSession(scylla.Config{
+		Host:            c.ScyllaConfig.Host,
+		Port:            c.ScyllaConfig.Port,
+		Username:        c.ScyllaConfig.Username,
+		Password:        c.ScyllaConfig.Password,
+		DefaultKeyspace: c.ScyllaConfig.DefaultKeyspace,
+	})
+	if err != nil {
+		panic(err)
+	}
+
 	fmt.Println(mqttClient)
+	fmt.Println(session)
 
 }
