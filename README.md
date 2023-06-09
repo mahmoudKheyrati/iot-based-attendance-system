@@ -8,6 +8,6 @@
 
 
 ## 🔧 Implementation
+- Arduino
 - Kotlin
-- Django Rest Framework
-- Retrofit
+- ...
