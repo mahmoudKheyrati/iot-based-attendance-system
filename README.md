@@ -9,5 +9,6 @@
 
 ## 🔧 Tools
 - Arduino
+- Go
 - Kotlin
 - ...
