@@ -14,7 +14,7 @@ import (
 func TestPublishSubscribe(t *testing.T) {
 	//mqtt.DEBUG = log.New(os.Stdout, "--------------", 0)
 	mqtt.ERROR = log.New(os.Stdout, "", 0)
-	opts := mqtt.NewClientOptions().AddBroker("tcp://localhost:1883").SetClientID("emqx_test_publisher")
+	opts := mqtt.NewClientOptions().AddBroker("tcp://localhost:1883").SetClientID("emqx_test_publisher").SetUsername("test").SetPassword("test")
 
 	opts.SetKeepAlive(60 * time.Second)
 	opts.SetPingTimeout(1 * time.Second)
