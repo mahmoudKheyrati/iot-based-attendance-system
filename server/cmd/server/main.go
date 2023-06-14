@@ -41,7 +41,7 @@ func main() {
 	mqttClient.Subscribe(topicNames.Request, mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
 
 	})
-	mqttClient.Subscribe(topicNames.LockStatusChanged, mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+	mqttClient.Subscribe(topicNames.LockOpened, mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
 
 	})
 	mqttClient.Subscribe(topicNames.AdminCommandResponse, mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
