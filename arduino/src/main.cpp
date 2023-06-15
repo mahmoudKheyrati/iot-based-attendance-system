@@ -15,6 +15,7 @@
 void splitString(String inputString, char delimiter, String* substrings, int maxSubstrings); 
 void subscribeToMqttTopics();
 void registerMqttHandlers(); 
+void sendStartupMessage();
 
 char requestTopicTemplate[50]; 
 void setup() {
@@ -27,6 +28,7 @@ void setup() {
     LCD::setup(); 
     REPORT::setup(); 
 
+    sendStartupMessage(); 
     subscribeToMqttTopics(); 
     registerMqttHandlers(); 
 
@@ -60,6 +62,11 @@ void loop(){
     
  }
 
+void sendStartupMessage() { 
+  char startUpMessageTemplate[100];
+  sprintf(startUpMessageTemplate, "%s/%s", startUpMessageTemplate, DEVICE_ID); 
+  MQTT::publish(startUpMessageTemplate, ""); 
+}
 
 void subscribeToMqttTopics() { 
 char adminCommandTopicTemplate[100]; 
@@ -87,11 +94,11 @@ void registerMqttHandlers() {
 
       LED::setNoColor(); 
 
-      if (permited == "LOCK_OPEN_PERMITTED") { 
+      if (permited == "LOCK_OPEN_PERMITED") { 
         LED::on(LED::GREEN); 
         
         RELAY::openDoor(2000); 
-      }else if (permited == "LOCK_OPEN_NOT_PERMITTED") { 
+      }else if (permited == "LOCK_OPEN_NOT_PERMITED") { 
         LED::on(LED::RED); 
         RELAY::close();
       }
