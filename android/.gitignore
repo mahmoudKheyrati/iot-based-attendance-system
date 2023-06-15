@@ -1,0 +1,19 @@
+ *.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/runConfigurations.xml
+
+# Built files
+/app/build/
+/captured_images/
+
+# Crashlytics configuations
+com_crashlytics_export_strings.xml
+
+# Crapware
+.DS_Store
