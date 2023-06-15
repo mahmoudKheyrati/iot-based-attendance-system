@@ -1,8 +1,7 @@
 topic_names:
   request: "request"
-  lock_status_changed: "lock_status_changed"
-  admin_command_response: "admin_command_response"
-  lock_state: "lock_state"
+  lock_opened: "lock_opened"
+  device_state: "device_state"
   admin_command: "admin_command"
   response: "response"
 
