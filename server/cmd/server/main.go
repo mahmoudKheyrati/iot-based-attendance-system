@@ -41,6 +41,14 @@ func main() {
 		panic(err)
 	}
 	var tn = c.TopicNames
+	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceStartup), mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+		topic := message.Topic()
+		topicParts := strings.Split(topic, "/")
+		deviceId := topicParts[1]
+		timestamp := time.Now().Unix()
+		fmt.Println("device_startup deviceId:", deviceId, " at timestamp:", timestamp)
+
+	})
 	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.Request), mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
 		topic := message.Topic()
 		topicParts := strings.Split(topic, "/")
