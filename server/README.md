@@ -2,6 +2,7 @@
 
 ## payload types: 
 ### receive payload from arduino: 
+- device startup message topic=device_startup
 - when an employee put his RFID card on the sensor, the arduino send message to topic=request/{device_id} message_format=``{SECONDS_AFTER_START},{CARD_UID}``
 - when lock opens the arduino send message to topic=lock_opened/{device_id} message_format= ``{SECONDS_AFTER_START}``
 - the current state of the lock sends to the topic=device_state/{device_id} message_format=``{SECONDS_AFTER_START},LED_COLOR_{RGB}``

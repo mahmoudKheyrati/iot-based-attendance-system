@@ -16,11 +16,12 @@ type Config struct {
 	MqttBrokerConfig MqttBrokerConfig
 }
 type TopicNames struct {
-	Request      string
-	LockOpened   string
-	DeviceState  string
-	AdminCommand string
-	Response     string
+	DeviceStartup string
+	Request       string
+	LockOpened    string
+	DeviceState   string
+	AdminCommand  string
+	Response      string
 }
 type ScyllaConfig struct {
 	Host            string
@@ -61,11 +62,12 @@ func NewConfig() *Config {
 		config = &Config{
 			Port: viper.GetInt("port"),
 			TopicNames: TopicNames{
-				Request:      viper.GetString("topic_names.request"),
-				LockOpened:   viper.GetString("topic_names.lock_opened"),
-				DeviceState:  viper.GetString("topic_names.device_status"),
-				AdminCommand: viper.GetString("topic_names.admin_command"),
-				Response:     viper.GetString("topic_names.response"),
+				DeviceStartup: viper.GetString("topic_names.device_startup"),
+				Request:       viper.GetString("topic_names.request"),
+				LockOpened:    viper.GetString("topic_names.lock_opened"),
+				DeviceState:   viper.GetString("topic_names.device_status"),
+				AdminCommand:  viper.GetString("topic_names.admin_command"),
+				Response:      viper.GetString("topic_names.response"),
 			},
 			ScyllaConfig: ScyllaConfig{
 				Host:            viper.GetString("scylla.host"),
