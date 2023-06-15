@@ -8,6 +8,8 @@ import (
 	"server/config"
 	mqtt2 "server/pkg/mqtt"
 	"server/pkg/scylla"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -37,18 +39,69 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	var topicNames = c.TopicNames
-	mqttClient.Subscribe(topicNames.Request, mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+	var tn = c.TopicNames
+	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.Request), mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+		topic := message.Topic()
+		topicParts := strings.Split(topic, "/")
+		deviceId := topicParts[1]
+
+		payload := string(message.Payload())
+		payloadParts := strings.Split(payload, ",")
+		secondAfterStart, err := strconv.Atoi(payloadParts[0])
+		if err != nil {
+			// log the error using zap
+			return
+		}
+		cardUid := payloadParts[1]
+
+		fmt.Println("request device_id:", deviceId, " secondAfterStart:", secondAfterStart, " cardUid:", cardUid)
+	})
+	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.LockOpened), mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+		topic := message.Topic()
+		topicParts := strings.Split(topic, "/")
+		deviceId := topicParts[1]
+
+		payload := string(message.Payload())
+		payloadParts := strings.Split(payload, ",")
+		secondAfterStart, err := strconv.Atoi(payloadParts[0])
+		if err != nil {
+			// log the error using zap
+			return
+		}
+
+		fmt.Println("lock-opened deviceId:", deviceId, " secondAfterStart:", secondAfterStart)
 
 	})
-	mqttClient.Subscribe(topicNames.LockOpened, mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceState), mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+		topic := message.Topic()
+		topicParts := strings.Split(topic, "/")
+		deviceId := topicParts[1]
 
-	})
-	mqttClient.Subscribe(topicNames.AdminCommandResponse, mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+		payload := string(message.Payload())
+		payloadParts := strings.Split(payload, ",")
+		secondAfterStart, err := strconv.Atoi(payloadParts[0])
+		if err != nil {
+			// log the error using zap
+			return
+		}
+		rgbString := strings.TrimPrefix(payloadParts[1], "LED_COLOR_")
+		red, err := strconv.Atoi(fmt.Sprintf("%c", rgbString[0]))
+		if err != nil {
+			// log the error using zap
+			return
+		}
+		green, err := strconv.Atoi(fmt.Sprintf("%c", rgbString[1]))
+		if err != nil {
+			// log the error using zap
+			return
+		}
+		blue, err := strconv.Atoi(fmt.Sprintf("%c", rgbString[2]))
+		if err != nil {
+			// log the error using zap
+			return
+		}
 
-	})
-
-	mqttClient.Subscribe(topicNames.LockState, mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+		fmt.Println("device-state deviceId:", deviceId, " secondsAfterStart:", secondAfterStart, " red:", red, " green:", green, " blue:", blue)
 
 	})
 
