@@ -15,6 +15,7 @@
 void splitString(String inputString, char delimiter, String* substrings, int maxSubstrings); 
 void subscribeToMqttTopics();
 void registerMqttHandlers(); 
+void sendStartupMessage();
 
 char requestTopicTemplate[50]; 
 void setup() {
@@ -27,6 +28,7 @@ void setup() {
     LCD::setup(); 
     REPORT::setup(); 
 
+    sendStartupMessage(); 
     subscribeToMqttTopics(); 
     registerMqttHandlers(); 
 
@@ -60,6 +62,11 @@ void loop(){
     
  }
 
+void sendStartupMessage() { 
+  char startUpMessageTemplate[100];
+  sprintf(startUpMessageTemplate, "%s/%s", startUpMessageTemplate, DEVICE_ID); 
+  MQTT::publish(startUpMessageTemplate, ""); 
+}
 
 void subscribeToMqttTopics() { 
 char adminCommandTopicTemplate[100]; 
