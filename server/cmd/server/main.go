@@ -3,11 +3,14 @@ package main
 import (
 	"fmt"
 	"github.com/eclipse/paho.mqtt.golang"
+	"github.com/gofiber/fiber/v2"
 	"os"
 	"os/signal"
 	"server/config"
 	mqtt2 "server/pkg/mqtt"
 	"server/pkg/scylla"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -37,25 +40,122 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	var topicNames = c.TopicNames
-	mqttClient.Subscribe(topicNames.Request, mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+	var tn = c.TopicNames
+	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.Request), mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+		topic := message.Topic()
+		topicParts := strings.Split(topic, "/")
+		deviceId := topicParts[1]
+
+		payload := string(message.Payload())
+		payloadParts := strings.Split(payload, ",")
+		secondAfterStart, err := strconv.Atoi(payloadParts[0])
+		if err != nil {
+			// log the error using zap
+			return
+		}
+		cardUid := payloadParts[1]
+
+		fmt.Println("request device_id:", deviceId, " secondAfterStart:", secondAfterStart, " cardUid:", cardUid)
+
+		// check authorization and then send response
+		//lockPermitted: LOCK_OPEN_PERMITED, LOCK_OPEN_NOT_PERMITED
+		var isPermitted = true
+		lockPermitted := "LOCK_OPEN_NOT_PERMITTED"
+		if isPermitted {
+			lockPermitted = "LOCK_OPEN_PERMITTED"
+		}
+		lcdMessage := "your welcome mahmoud ;)"
+
+		messagePayload := fmt.Sprintf("%d,%s,%s", time.Now().Unix(), lockPermitted, lcdMessage)
+		mqttClient.Publish(fmt.Sprintf("response/%s/%s", deviceId, cardUid), mqtt2.ExactlyOnce, false, messagePayload)
+	})
+	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.LockOpened), mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+		topic := message.Topic()
+		topicParts := strings.Split(topic, "/")
+		deviceId := topicParts[1]
+
+		payload := string(message.Payload())
+		payloadParts := strings.Split(payload, ",")
+		secondAfterStart, err := strconv.Atoi(payloadParts[0])
+		if err != nil {
+			// log the error using zap
+			return
+		}
+
+		fmt.Println("lock-opened deviceId:", deviceId, " secondAfterStart:", secondAfterStart)
 
 	})
-	mqttClient.Subscribe(topicNames.LockOpened, mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceState), mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+		topic := message.Topic()
+		topicParts := strings.Split(topic, "/")
+		deviceId := topicParts[1]
+
+		payload := string(message.Payload())
+		payloadParts := strings.Split(payload, ",")
+		secondAfterStart, err := strconv.Atoi(payloadParts[0])
+		if err != nil {
+			// log the error using zap
+			return
+		}
+		rgbString := strings.TrimPrefix(payloadParts[1], "LED_COLOR_")
+		red, err := strconv.Atoi(fmt.Sprintf("%c", rgbString[0]))
+		if err != nil {
+			// log the error using zap
+			return
+		}
+		green, err := strconv.Atoi(fmt.Sprintf("%c", rgbString[1]))
+		if err != nil {
+			// log the error using zap
+			return
+		}
+		blue, err := strconv.Atoi(fmt.Sprintf("%c", rgbString[2]))
+		if err != nil {
+			// log the error using zap
+			return
+		}
+
+		fmt.Println("device-state deviceId:", deviceId, " secondsAfterStart:", secondAfterStart, " red:", red, " green:", green, " blue:", blue)
 
 	})
-	mqttClient.Subscribe(topicNames.AdminCommandResponse, mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
 
+	app := fiber.New()
+
+	// todo: add authentication middleware
+
+	app.Post("/admin-command", func(c *fiber.Ctx) error {
+		body := struct {
+			DeviceId string
+			Command  string
+			R        int
+			G        int
+			B        int
+		}{}
+		if err := c.BodyParser(&body); err != nil {
+			// log error
+			return nil
+		}
+		switch body.Command {
+		case "open-door":
+			payloadOpenDoor := fmt.Sprintf("%d,%s", time.Now().Unix(), "LOCK_OPEN_PERMITTED")
+			mqttClient.Publish(fmt.Sprintf("%s/%s", tn.AdminCommand, body.DeviceId), mqtt2.ExactlyOnce, false, payloadOpenDoor)
+
+		case "change-led-color":
+			payloadLedChangeColor := fmt.Sprintf("%d,LED_CHANGE_COLOR_%d%d%d", time.Now().Unix(), body.R, body.G, body.B)
+			mqttClient.Publish(fmt.Sprintf("%s/%s", tn.AdminCommand, body.DeviceId), mqtt2.ExactlyOnce, false, payloadLedChangeColor)
+
+		default:
+			// handle error and log that
+
+		}
+
+		return c.SendString("Hello, World!")
 	})
 
-	mqttClient.Subscribe(topicNames.LockState, mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
+	err = app.Listen(fmt.Sprintf(":%d", c.Port))
+	if err != nil {
+		panic(err)
+	}
 
-	})
-
-	//mqttClient.Publish(topicNames.AdminCommand, mqtt2.ExactlyOnce, false, "")
-	//mqttClient.Publish(fmt.Sprintf("%s-%s", topicNames.Response, "USER_ID"), mqtt2.ExactlyOnce, false, "")
-
-	fmt.Println(mqttClient)
 	fmt.Println(session)
 
 	quit := make(chan os.Signal, 1)

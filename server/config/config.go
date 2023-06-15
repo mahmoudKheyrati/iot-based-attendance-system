@@ -10,6 +10,7 @@ import (
 )
 
 type Config struct {
+	Port             int
 	TopicNames       TopicNames
 	ScyllaConfig     ScyllaConfig
 	MqttBrokerConfig MqttBrokerConfig
@@ -58,6 +59,7 @@ func NewConfig() *Config {
 		}
 
 		config = &Config{
+			Port: viper.GetInt("port"),
 			TopicNames: TopicNames{
 				Request:      viper.GetString("topic_names.request"),
 				LockOpened:   viper.GetString("topic_names.lock_opened"),
