@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/eclipse/paho.mqtt.golang"
+	"github.com/gofiber/fiber/v2"
 	"os"
 	"os/signal"
 	"server/config"
@@ -117,10 +118,44 @@ func main() {
 
 	})
 
-	//mqttClient.Publish(topicNames.AdminCommand, mqtt2.ExactlyOnce, false, "")
-	//mqttClient.Publish(fmt.Sprintf("%s-%s", topicNames.Response, "USER_ID"), mqtt2.ExactlyOnce, false, "")
+	app := fiber.New()
 
-	fmt.Println(mqttClient)
+	// todo: add authentication middleware
+
+	app.Post("/admin-command", func(c *fiber.Ctx) error {
+		body := struct {
+			DeviceId string
+			Command  string
+			R        int
+			G        int
+			B        int
+		}{}
+		if err := c.BodyParser(&body); err != nil {
+			// log error
+			return nil
+		}
+		switch body.Command {
+		case "open-door":
+			payloadOpenDoor := fmt.Sprintf("%d,%s", time.Now().Unix(), "LOCK_OPEN_PERMITTED")
+			mqttClient.Publish(fmt.Sprintf("%s/%s", tn.AdminCommand, body.DeviceId), mqtt2.ExactlyOnce, false, payloadOpenDoor)
+
+		case "change-led-color":
+			payloadLedChangeColor := fmt.Sprintf("%d,LED_CHANGE_COLOR_%d%d%d", time.Now().Unix(), body.R, body.G, body.B)
+			mqttClient.Publish(fmt.Sprintf("%s/%s", tn.AdminCommand, body.DeviceId), mqtt2.ExactlyOnce, false, payloadLedChangeColor)
+
+		default:
+			// handle error and log that
+
+		}
+
+		return c.SendString("Hello, World!")
+	})
+
+	err = app.Listen(fmt.Sprintf(":%d", c.Port))
+	if err != nil {
+		panic(err)
+	}
+
 	fmt.Println(session)
 
 	quit := make(chan os.Signal, 1)
