@@ -55,6 +55,18 @@ func main() {
 		cardUid := payloadParts[1]
 
 		fmt.Println("request device_id:", deviceId, " secondAfterStart:", secondAfterStart, " cardUid:", cardUid)
+
+		// check authorization and then send response
+		//lockPermitted: LOCK_OPEN_PERMITED, LOCK_OPEN_NOT_PERMITED
+		var isPermitted = true
+		lockPermitted := "LOCK_OPEN_NOT_PERMITTED"
+		if isPermitted {
+			lockPermitted = "LOCK_OPEN_PERMITTED"
+		}
+		lcdMessage := "your welcome mahmoud ;)"
+
+		messagePayload := fmt.Sprintf("%d,%s,%s", time.Now().Unix(), lockPermitted, lcdMessage)
+		mqttClient.Publish(fmt.Sprintf("response/%s/%s", deviceId, cardUid), mqtt2.ExactlyOnce, false, messagePayload)
 	})
 	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.LockOpened), mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
 		topic := message.Topic()
