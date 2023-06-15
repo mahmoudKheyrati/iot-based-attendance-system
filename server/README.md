@@ -8,7 +8,7 @@
 
 ### send payload to arduino by server: 
 - topic=admin_command/{device_id} message_format=``{TIMESTAMP},{LOCK_OPEN, LED_CHANGE_COLOR_{RGB}}`` which R,G and B could be 0 or 1.
-- topic=response/{device_id}/{card_uid} message_format=``{TIMESTAMP},{LOCK_OPEN_PERMITED, LOCK_OPEN_NOT_PERMITED},{NAME},{LCD_MESSAGE}``
+- topic=response/{device_id}/{card_uid} message_format=``{TIMESTAMP},{LOCK_OPEN_PERMITED, LOCK_OPEN_NOT_PERMITED},{LCD_MESSAGE}``
 
 ### Setup
 first up and running scylla database and you should create the keyspace in it.
