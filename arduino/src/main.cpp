@@ -87,11 +87,11 @@ void registerMqttHandlers() {
 
       LED::setNoColor(); 
 
-      if (permited == "LOCK_OPEN_PERMITED") { 
+      if (permited == "LOCK_OPEN_PERMITTED") { 
         LED::on(LED::GREEN); 
         
         RELAY::openDoor(2000); 
-      }else if (permited == "LOCK_OPEN_NOT_PERMITED") { 
+      }else if (permited == "LOCK_OPEN_NOT_PERMITTED") { 
         LED::on(LED::RED); 
         RELAY::close();
       }
