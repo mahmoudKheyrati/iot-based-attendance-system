@@ -55,13 +55,13 @@ create table if not exists attendance_system.attendance_log
 
 create table attendance_system.admin_commands_log
 (
-    timestamp      timestamp,
     device_id      text,
     command        text,
-    processed      boolean,
     admin_username text,
-    primary key (timestamp, command, processed, admin_username)
-);
+    command_payload text,
+    timestamp      timestamp,
+    primary key (device_id,command)
+) with clustering order by (timestamp asc);
 
 create table if not exists attendance_system.lock_opened_log
 (
