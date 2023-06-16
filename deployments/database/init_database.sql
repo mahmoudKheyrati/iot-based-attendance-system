@@ -11,6 +11,14 @@ create table if not exists attendance_system.device
     primary key (id, location),
 );
 
+create table if not exists attendance_system.device_startup
+(
+    device_id            text,
+    server_timestamp     timestamp,
+    time_after_start_sec int,
+    primary key ( device_id, server_timestamp )
+);
+
 create table if not exists attendance_system.admin
 (
     username        uuid,
@@ -47,12 +55,11 @@ create table if not exists attendance_system.attendance_log
 
 create table attendance_system.admin_commands_log
 (
-    timestamp timestamp,
-    device_id text,
-    command   text,
-    processed boolean,
+    timestamp      timestamp,
+    device_id      text,
+    command        text,
+    processed      boolean,
     admin_username text,
     primary key (timestamp, command, processed, admin_username)
 );
-
 
