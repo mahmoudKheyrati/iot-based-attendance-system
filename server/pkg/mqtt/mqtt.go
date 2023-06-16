@@ -29,6 +29,8 @@ func NewMqttClient(config Config) (mqtt.Client, error) {
 	mqtt.ERROR = log.New(os.Stdout, "", 0)
 	opts := mqtt.NewClientOptions().AddBroker(fmt.Sprintf("tcp://%s:%d", config.Host, config.Port)).
 		SetClientID(config.ClientId).
+		SetUsername(config.Username).
+		SetPassword(config.Password).
 		SetKeepAlive(time.Duration(config.KeepAliveSec) * time.Second).
 		SetPingTimeout(time.Duration(config.PingTimeoutSec) * time.Second)
 
