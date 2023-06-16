@@ -33,7 +33,7 @@ create index if not exists on attendance_system.admin (username) with options = 
 
 create table if not exists attendance_system.employee
 (
-    card_uid       uuid,
+    card_uid     uuid,
     first_name   text,
     last_name    text,
     email        text,
@@ -45,12 +45,12 @@ create index if not exists on attendance_system.employee (card_uid) with options
 
 create table if not exists attendance_system.attendance_log
 (
-    timestamp     timestamp,
-    cardId        uuid,
-    action        text,
-    device_id     text,
-    seen_by_admin boolean,
-    primary key ( timestamp, action )
+    timestamp        timestamp,
+    device_id        text,
+    card_uid         uuid,
+    action           text,
+    response_payload text,
+    primary key ( timestamp, device_id, card_uid )
 );
 
 create table attendance_system.admin_commands_log
