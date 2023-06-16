@@ -1,11 +1,9 @@
 package config
 
 import (
-	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 	"log"
-	"os"
 	"sync"
 )
 
@@ -48,7 +46,6 @@ func NewConfig() *Config {
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Println(os.Environ())
 
 	once.Do(func() {
 		viper.SetConfigName("config")

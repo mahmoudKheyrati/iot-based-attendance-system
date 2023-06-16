@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/eclipse/paho.mqtt.golang"
 	"github.com/gofiber/fiber/v2"
+	"log"
 	"os"
 	"os/signal"
 	"server/config"
@@ -159,10 +160,12 @@ func main() {
 		return c.SendString("Hello, World!")
 	})
 
-	err = app.Listen(fmt.Sprintf(":%d", c.Port))
-	if err != nil {
-		panic(err)
-	}
+	go func() {
+		err = app.Listen(fmt.Sprintf(":%d", c.Port))
+		if err != nil {
+			log.Println(err)
+		}
+	}()
 
 	fmt.Println(session)
 
