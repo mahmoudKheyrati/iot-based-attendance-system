@@ -63,3 +63,10 @@ create table attendance_system.admin_commands_log
     primary key (timestamp, command, processed, admin_username)
 );
 
+create table if not exists attendance_system.lock_opened_log(
+    device_id text,
+    server_timestamp timestamp,
+    time_after_startup_sec int,
+    primary key ( device_id )
+);
+
