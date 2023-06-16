@@ -33,15 +33,15 @@ create index if not exists on attendance_system.admin (username) with options = 
 
 create table if not exists attendance_system.employee
 (
-    cardId       uuid,
+    card_uid       uuid,
     first_name   text,
     last_name    text,
     email        text,
     phone_number text,
     rules        set<text>,
-    primary key ( cardId )
+    primary key ( card_uid )
 );
-create index if not exists on attendance_system.employee (cardId) with options = {'unique': 'true'};
+create index if not exists on attendance_system.employee (card_uid) with options = {'unique': 'true'};
 
 create table if not exists attendance_system.attendance_log
 (
