@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -134,19 +135,21 @@
                 android:orientation="horizontal"
                 android:weightSum="3"
                 android:layout_marginTop="10dp">
+
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/final_light_color"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="#DAD9D9"
-                    android:textAllCaps="false"
                     android:layout_margin="10dp"
-                    android:gravity="center"
-                    android:text="Light Color"
                     android:layout_weight="3"
-                    android:textSize="20dp"
+                    android:background="#DAD9D9"
+                    android:gravity="center"
                     android:padding="5dp"
-                    android:textColor="@color/white"/>
+                    android:text=""
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="20dp"
+                    tools:ignore="SpeakableTextPresentCheck" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -170,6 +173,48 @@
             </LinearLayout>
 
 
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Active Users"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/black"
+                    android:textSize="14dp"/>
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:background="#9C9B9B"
+                android:layout_margin="10dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:layout_margin="10dp">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/active_users_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:listitem="@layout/item_user"/>
+            </LinearLayout>
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
