@@ -2,11 +2,19 @@ package api
 
 import (
 	"context"
+	"server/pkg/db"
 	"server/proto/gen/pb-go/iot/attendance_system"
 )
 
 type AttendanceSystem struct {
 	attendance_system.UnimplementedAttendanceSystemServer
+	adminCommandLogRepo db.AdminCommandLogRepo
+	attendanceLogRepo   db.AttendanceLogRepo
+	deviceRepo          db.DeviceRepo
+	deviceStartupRepo   db.DeviceStartupRepo
+	deviceStateLogRepo  db.DeviceStateLogRepo
+	employeeRepo        db.EmployeeRepo
+	lockOpenedLogRepo   db.LockOpenedLogRepo
 }
 
 func (a *AttendanceSystem) LedColor(request *attendance_system.LedColorRequest, server attendance_system.AttendanceSystem_LedColorServer) error {
