@@ -20,9 +20,13 @@ message LockOpenedHistoryRequest {
   string device_id = 1;
 }
 message LockOpenedHistoryResponse {
-  int64 unix_timestamp = 1 ;
-  string first_name = 2;
-  string last_name = 3 ;
+  message history {
+    int64 server_timestamp = 1;
+    int32 time_after_startup_sec =2;
+  };
+  repeated history histories = 1 ;
+//  string first_name = 2;
+//  string last_name = 3 ;
 }
 
 message ChangeLedColorRequest {

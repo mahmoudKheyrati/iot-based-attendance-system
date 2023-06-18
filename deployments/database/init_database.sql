@@ -76,7 +76,7 @@ create table if not exists attendance_system.lock_opened_log
     server_timestamp       timestamp,
     time_after_startup_sec int,
     primary key ( device_id )
-);
+)with clustering order by (server_timestamp asc ,  time_after_startup_sec asc );
 
 create table if not exists attendance_system.device_state_log
 (

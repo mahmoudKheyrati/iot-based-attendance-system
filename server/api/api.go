@@ -75,8 +75,34 @@ func (a *AttendanceSystem) LedColor(request *attendance_system.LedColorRequest, 
 }
 
 func (a *AttendanceSystem) LockOpenedHistory(request *attendance_system.LockOpenedHistoryRequest, server attendance_system.AttendanceSystem_LockOpenedHistoryServer) error {
-	//TODO implement me
-	panic("implement me")
+	ticker := time.NewTicker(5 * time.Second)
+	lastCount := 0
+	for {
+		select {
+		case <-server.Context().Done():
+			return nil
+		case <-ticker.C:
+			logs, err := a.lockOpenedLogRepo.GetByDeviceID(request.DeviceId)
+			if err != nil {
+				return errors.New("internal server error")
+			}
+			if len(logs) != lastCount {
+				lastCount = len(logs)
+				response := attendance_system.LockOpenedHistoryResponse{}
+				for _, openedLog := range logs {
+					response.Histories = append(response.Histories, &attendance_system.LockOpenedHistoryResponseHistory{
+						ServerTimestamp:     openedLog.ServerTimestamp.Unix(),
+						TimeAfterStartupSec: int32(openedLog.TimeAfterStartupSec),
+					})
+				}
+				err := server.Send(&response)
+				if err != nil {
+					log.Println(err)
+					return errors.New("can not send response to client!")
+				}
+			}
+		}
+	}
 }
 
 func (a *AttendanceSystem) ChangeLedColor(ctx context.Context, request *attendance_system.ChangeLedColorRequest) (*attendance_system.ChangeLedColorResponse, error) {
@@ -107,11 +133,11 @@ func (a *AttendanceSystem) GetAllDeviceIds(ctx context.Context, request *attenda
 	if err != nil {
 		return nil, errors.New("internal server error")
 	}
-	response := &attendance_system.GetDeviceIdsResponse{}
+	response := attendance_system.GetDeviceIdsResponse{}
 	for _, device := range devices {
 		response.Devices = append(response.Devices, &attendance_system.Device{DeviceId: device.ID.String()})
 	}
-	return response, nil
+	return &response, nil
 }
 
 func (a *AttendanceSystem) GetAllPresentPersons(ctx context.Context, request *attendance_system.GetPresentEmployeeRequest) (*attendance_system.GetPresentEmployeeResponse, error) {
