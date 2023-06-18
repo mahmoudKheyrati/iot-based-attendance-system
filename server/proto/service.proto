@@ -20,25 +20,28 @@ message LockOpenedHistoryRequest {
   string device_id = 1;
 }
 message LockOpenedHistoryResponse {
-  int64 unix_timestamp = 1 ;
-  string first_name = 2;
-  string last_name = 3 ;
+  message history {
+    int64 server_timestamp = 1;
+    int32 time_after_startup_sec =2;
+  };
+  repeated history histories = 1 ;
+//  string first_name = 2;
+//  string last_name = 3 ;
 }
 
 message ChangeLedColorRequest {
-  int32 red = 1;
-  int32 green = 2;
-  int32  blue = 3;
+  string device_id = 1;
+  int32 red = 2;
+  int32 green = 3;
+  int32  blue = 4;
 }
 message ChangeLedColorResponse {
-  int32 status = 1 ;
 }
 
 message OpenDoorRequest{
-
+  string device_id =1 ;
 }
 message OpenDoorResponse {
-  int32 status = 1;
 }
 
 message GetDeviceIdsRequest {
@@ -68,6 +71,6 @@ service attendanceSystem {
   rpc lockOpenedHistory(LockOpenedHistoryRequest) returns (stream LockOpenedHistoryResponse);
   rpc changeLedColor(ChangeLedColorRequest) returns (ChangeLedColorResponse);
   rpc openDoor(OpenDoorRequest) returns (OpenDoorResponse);
-  rpc getDeviceIdsRequest(GetDeviceIdsRequest) returns (GetDeviceIdsResponse);
-  rpc getPresentPersonsRequest(GetPresentEmployeeRequest) returns (GetPresentEmployeeResponse);
+  rpc getAllDeviceIds(GetDeviceIdsRequest) returns (GetDeviceIdsResponse);
+  rpc getAllPresentPersons(GetPresentEmployeeRequest) returns (GetPresentEmployeeResponse);
 }

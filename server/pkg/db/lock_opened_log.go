@@ -27,3 +27,24 @@ func (l *LockOpenedLogRepo) Insert(lockOpenedLog LockOpenedLog) error {
 	err := l.session.Query(query, lockOpenedLog.DeviceID, lockOpenedLog.ServerTimestamp, lockOpenedLog.TimeAfterStartupSec).Exec()
 	return err
 }
+
+func (l *LockOpenedLogRepo) GetByDeviceID(deviceID string) ([]LockOpenedLog, error) {
+	// Construct the SELECT query
+	query := "SELECT device_id, server_timestamp, time_after_startup_sec FROM attendance_system.lock_opened_log WHERE device_id = ? ORDER BY server_timestamp ASC, time_after_startup_sec ASC"
+
+	// Execute the query with the given device ID
+	var lockOpenedLogs []LockOpenedLog
+	iter := l.session.Query(query, deviceID).Iter()
+	for {
+		var lockOpenedLog LockOpenedLog
+		if !iter.Scan(&lockOpenedLog.DeviceID, &lockOpenedLog.ServerTimestamp, &lockOpenedLog.TimeAfterStartupSec) {
+			break
+		}
+		lockOpenedLogs = append(lockOpenedLogs, lockOpenedLog)
+	}
+	if err := iter.Close(); err != nil {
+		return nil, err
+	}
+
+	return lockOpenedLogs, nil
+}

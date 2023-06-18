@@ -46,3 +46,16 @@ func (e *EmployeeRepo) GetAllEmployees() ([]Employee, error) {
 	err := iter.Close()
 	return employees, err
 }
+
+func (e *EmployeeRepo) GetByCardUID(cardUID string) (*Employee, error) {
+	// Construct the SELECT query
+	query := "SELECT card_uid, first_name, last_name, email, phone_number, rules FROM attendance_system.employee WHERE card_uid = ?"
+
+	// Execute the query with the given card UID
+	var employee Employee
+	if err := e.session.Query(query, cardUID).Scan(&employee.CardUID, &employee.FirstName, &employee.LastName, &employee.Email, &employee.PhoneNumber, &employee.Rules); err != nil {
+		return nil, err
+	}
+
+	return &employee, nil
+}

@@ -40,7 +40,7 @@ create index if not exists on attendance_system.admin (username) with options = 
 
 create table if not exists attendance_system.employee
 (
-    card_uid     uuid,
+    card_uid     text,
     first_name   text,
     last_name    text,
     email        text,
@@ -76,7 +76,7 @@ create table if not exists attendance_system.lock_opened_log
     server_timestamp       timestamp,
     time_after_startup_sec int,
     primary key ( device_id )
-);
+)with clustering order by (server_timestamp asc ,  time_after_startup_sec asc );
 
 create table if not exists attendance_system.device_state_log
 (
@@ -87,5 +87,5 @@ create table if not exists attendance_system.device_state_log
     led_green              boolean,
     led_blue               boolean,
     primary key ( device_id )
-) with clustering order by (server_timestamp asc );
+) with clustering order by (server_timestamp asc , time_after_startup_sec asc );
 
