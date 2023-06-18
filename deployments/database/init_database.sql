@@ -87,5 +87,5 @@ create table if not exists attendance_system.device_state_log
     led_green              boolean,
     led_blue               boolean,
     primary key ( device_id )
-) with clustering order by (server_timestamp asc );
+) with clustering order by (server_timestamp asc , time_after_startup_sec asc );
 

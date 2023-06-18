@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"log"
 	"server/config"
 	"server/pkg/db"
 	mqtt2 "server/pkg/mqtt"
@@ -26,8 +27,51 @@ type AttendanceSystem struct {
 }
 
 func (a *AttendanceSystem) LedColor(request *attendance_system.LedColorRequest, server attendance_system.AttendanceSystem_LedColorServer) error {
-	//TODO implement me
-	panic("implement me")
+	ticker := time.NewTicker(5 * time.Second)
+	var lastRed int32
+	var lastGreen int32
+	var lastBlue int32
+	var isFirstRun = true
+	for {
+		select {
+		case <-server.Context().Done():
+			return nil
+		case <-ticker.C:
+			state, err := a.deviceStateLogRepo.GetLatestStateByDeviceID(request.DeviceId)
+			if err != nil {
+				return err
+			}
+			var red int32
+			var green int32
+			var blue int32
+			if state.LedRed {
+				red = 1
+			}
+			if state.LedGreen {
+				green = 1
+			}
+			if state.LedBlue {
+				blue = 1
+			}
+			if isFirstRun || red != lastRed || green != lastGreen || blue != lastBlue {
+				err = server.Send(&attendance_system.LedColorResponse{
+					Red:   red,
+					Green: green,
+					Blue:  blue,
+				})
+				isFirstRun = false
+				lastRed = red
+				lastGreen = green
+				lastBlue = blue
+			}
+			if err != nil {
+				log.Println(err)
+				return errors.New("can not send response to client")
+			}
+
+		}
+
+	}
 }
 
 func (a *AttendanceSystem) LockOpenedHistory(request *attendance_system.LockOpenedHistoryRequest, server attendance_system.AttendanceSystem_LockOpenedHistoryServer) error {
@@ -71,6 +115,6 @@ func (a *AttendanceSystem) GetAllDeviceIds(ctx context.Context, request *attenda
 }
 
 func (a *AttendanceSystem) GetAllPresentPersons(ctx context.Context, request *attendance_system.GetPresentEmployeeRequest) (*attendance_system.GetPresentEmployeeResponse, error) {
-	//TODO implement me
+	//TODO spark
 	panic("implement me")
 }
