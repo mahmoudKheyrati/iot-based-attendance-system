@@ -4,6 +4,11 @@ import (
 	"fmt"
 	"github.com/eclipse/paho.mqtt.golang"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/recover"
+	"google.golang.org/grpc"
+	"net"
+	"server/proto/gen/pb-go/iot/attendance_system"
+
 	"log"
 	"os"
 	"os/signal"
@@ -127,11 +132,25 @@ func main() {
 
 	})
 
+	listen, err := net.Listen("tcp", fmt.Sprintf(":%d", c.Port))
+	if err != nil {
+		log.Fatalln(err)
+	}
+	server := grpc.NewServer()
+	attendance_system.RegisterAttendanceSystemServer(server, nil)
+	if err := server.Serve(listen); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
+
 	app := fiber.New()
+	app.Use(recover.New())
+
+	api := app.Group("/api")
+	v1 := api.Group("/v1")
 
 	// todo: add authentication middleware
 
-	app.Post("/admin-command", func(c *fiber.Ctx) error {
+	v1.Post("/admin-command", func(c *fiber.Ctx) error {
 		body := struct {
 			DeviceId string
 			Command  string
@@ -153,11 +172,11 @@ func main() {
 			mqttClient.Publish(fmt.Sprintf("%s/%s", tn.AdminCommand, body.DeviceId), mqtt2.ExactlyOnce, false, payloadLedChangeColor)
 
 		default:
-			// handle error and log that
 
+			return c.Status(400).JSONP(fiber.Map{"status": "error", "message": "command not supported"})
 		}
 
-		return c.SendString("Hello, World!")
+		return c.Status(200).JSONP(fiber.Map{"status": "ok", "message": "admin command send to iot device successfully"})
 	})
 
 	go func() {
@@ -166,6 +185,8 @@ func main() {
 			log.Println(err)
 		}
 	}()
+
+	// todo: add websocket to show led colors real-time and lock-opened history
 
 	fmt.Println(session)
 

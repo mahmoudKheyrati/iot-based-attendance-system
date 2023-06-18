@@ -13,3 +13,8 @@
 
 ### Setup
 first up and running scylla database and you should create the keyspace in it.
+
+## Generate protobuf for grpc
+golang: ```bash
+docker run -v $PWD:/defs registry.docker.ir/namely/protoc-all -f service.proto -l go #or go, csharp, etc
+```
