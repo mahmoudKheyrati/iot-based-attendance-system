@@ -58,9 +58,16 @@ func (a *AttendanceSystem) OpenDoor(ctx context.Context, request *attendance_sys
 
 }
 
-func (a *AttendanceSystem) GetAllDevices(ctx context.Context, request *attendance_system.GetDeviceIdsRequest) (*attendance_system.GetDeviceIdsResponse, error) {
-	//TODO implement me
-	panic("implement me")
+func (a *AttendanceSystem) GetAllDeviceIds(ctx context.Context, request *attendance_system.GetDeviceIdsRequest) (*attendance_system.GetDeviceIdsResponse, error) {
+	devices, err := a.deviceRepo.GetAllDevices()
+	if err != nil {
+		return nil, errors.New("internal server error")
+	}
+	response := &attendance_system.GetDeviceIdsResponse{}
+	for _, device := range devices {
+		response.Devices = append(response.Devices, &attendance_system.Device{DeviceId: device.ID.String()})
+	}
+	return response, nil
 }
 
 func (a *AttendanceSystem) GetAllPresentPersons(ctx context.Context, request *attendance_system.GetPresentEmployeeRequest) (*attendance_system.GetPresentEmployeeResponse, error) {

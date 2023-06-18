@@ -26,7 +26,7 @@ type AttendanceSystemClient interface {
 	LockOpenedHistory(ctx context.Context, in *LockOpenedHistoryRequest, opts ...grpc.CallOption) (AttendanceSystem_LockOpenedHistoryClient, error)
 	ChangeLedColor(ctx context.Context, in *ChangeLedColorRequest, opts ...grpc.CallOption) (*ChangeLedColorResponse, error)
 	OpenDoor(ctx context.Context, in *OpenDoorRequest, opts ...grpc.CallOption) (*OpenDoorResponse, error)
-	GetAllDevices(ctx context.Context, in *GetDeviceIdsRequest, opts ...grpc.CallOption) (*GetDeviceIdsResponse, error)
+	GetAllDeviceIds(ctx context.Context, in *GetDeviceIdsRequest, opts ...grpc.CallOption) (*GetDeviceIdsResponse, error)
 	GetAllPresentPersons(ctx context.Context, in *GetPresentEmployeeRequest, opts ...grpc.CallOption) (*GetPresentEmployeeResponse, error)
 }
 
@@ -120,9 +120,9 @@ func (c *attendanceSystemClient) OpenDoor(ctx context.Context, in *OpenDoorReque
 	return out, nil
 }
 
-func (c *attendanceSystemClient) GetAllDevices(ctx context.Context, in *GetDeviceIdsRequest, opts ...grpc.CallOption) (*GetDeviceIdsResponse, error) {
+func (c *attendanceSystemClient) GetAllDeviceIds(ctx context.Context, in *GetDeviceIdsRequest, opts ...grpc.CallOption) (*GetDeviceIdsResponse, error) {
 	out := new(GetDeviceIdsResponse)
-	err := c.cc.Invoke(ctx, "/ir.mahmoud.iot_attendance_system.attendanceSystem/getAllDevices", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/ir.mahmoud.iot_attendance_system.attendanceSystem/getAllDeviceIds", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -146,7 +146,7 @@ type AttendanceSystemServer interface {
 	LockOpenedHistory(*LockOpenedHistoryRequest, AttendanceSystem_LockOpenedHistoryServer) error
 	ChangeLedColor(context.Context, *ChangeLedColorRequest) (*ChangeLedColorResponse, error)
 	OpenDoor(context.Context, *OpenDoorRequest) (*OpenDoorResponse, error)
-	GetAllDevices(context.Context, *GetDeviceIdsRequest) (*GetDeviceIdsResponse, error)
+	GetAllDeviceIds(context.Context, *GetDeviceIdsRequest) (*GetDeviceIdsResponse, error)
 	GetAllPresentPersons(context.Context, *GetPresentEmployeeRequest) (*GetPresentEmployeeResponse, error)
 }
 
@@ -166,8 +166,8 @@ func (UnimplementedAttendanceSystemServer) ChangeLedColor(context.Context, *Chan
 func (UnimplementedAttendanceSystemServer) OpenDoor(context.Context, *OpenDoorRequest) (*OpenDoorResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OpenDoor not implemented")
 }
-func (UnimplementedAttendanceSystemServer) GetAllDevices(context.Context, *GetDeviceIdsRequest) (*GetDeviceIdsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllDevices not implemented")
+func (UnimplementedAttendanceSystemServer) GetAllDeviceIds(context.Context, *GetDeviceIdsRequest) (*GetDeviceIdsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAllDeviceIds not implemented")
 }
 func (UnimplementedAttendanceSystemServer) GetAllPresentPersons(context.Context, *GetPresentEmployeeRequest) (*GetPresentEmployeeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllPresentPersons not implemented")
@@ -262,20 +262,20 @@ func _AttendanceSystem_OpenDoor_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AttendanceSystem_GetAllDevices_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _AttendanceSystem_GetAllDeviceIds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetDeviceIdsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AttendanceSystemServer).GetAllDevices(ctx, in)
+		return srv.(AttendanceSystemServer).GetAllDeviceIds(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/ir.mahmoud.iot_attendance_system.attendanceSystem/getAllDevices",
+		FullMethod: "/ir.mahmoud.iot_attendance_system.attendanceSystem/getAllDeviceIds",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AttendanceSystemServer).GetAllDevices(ctx, req.(*GetDeviceIdsRequest))
+		return srv.(AttendanceSystemServer).GetAllDeviceIds(ctx, req.(*GetDeviceIdsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -314,8 +314,8 @@ var AttendanceSystem_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AttendanceSystem_OpenDoor_Handler,
 		},
 		{
-			MethodName: "getAllDevices",
-			Handler:    _AttendanceSystem_GetAllDevices_Handler,
+			MethodName: "getAllDeviceIds",
+			Handler:    _AttendanceSystem_GetAllDeviceIds_Handler,
 		},
 		{
 			MethodName: "getAllPresentPersons",
