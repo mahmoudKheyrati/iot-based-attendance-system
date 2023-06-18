@@ -14,6 +14,8 @@ import (
 	"server/config"
 	mqtt2 "server/pkg/mqtt"
 	"server/pkg/scylla"
+
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -77,6 +79,7 @@ func main() {
 		log.Fatalln(err)
 	}
 	server := grpc.NewServer()
+	reflection.Register(server)
 	attendance_system.RegisterAttendanceSystemServer(server, nil)
 	if err := server.Serve(listen); err != nil {
 		log.Fatalf("failed to serve: %v", err)
