@@ -74,6 +74,7 @@ func main() {
 	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.LockOpened), mqtt2.ExactlyOnce, mqtt_handlers.LockOpenedHandler(lockOpenedLogRepo))
 	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceState), mqtt2.ExactlyOnce, mqtt_handlers.DeviceStateHandler(deviceStateLogRepo))
 
+	log.Println("starting grpc server on port: ", c.Port)
 	listen, err := net.Listen("tcp", fmt.Sprintf(":%d", c.Port))
 	if err != nil {
 		log.Fatalln(err)
