@@ -7,6 +7,7 @@ import (
 	"google.golang.org/grpc"
 	"net"
 	"server/internal/mqtt_handlers"
+	"server/pkg/db"
 	"server/proto/gen/pb-go/iot/attendance_system"
 
 	"log"
@@ -61,13 +62,13 @@ func main() {
 	//adminCommandLogRepo := db.NewAdminCommandLogRepo(session)
 	//attendanceLogRepo := db.NewAttendanceLogRepo(session)
 	//deviceRepo := db.NewDeviceRepo(session)
-	//deviceStartupRepo := db.NewDeviceStartupRepo(session)
+	deviceStartupRepo := db.NewDeviceStartupRepo(session)
 	//deviceStateLogRepo := db.NewDeviceStateLogRepo(session)
 	//employeeRepo := db.NewEmployeeRepo(session)
 	//lockOpenedLogRepo := db.NewLockOpenedLogRepo(session)
 
 	var tn = c.TopicNames
-	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceStartup), mqtt2.ExactlyOnce, mqtt_handlers.DeviceStartupHandler())
+	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceStartup), mqtt2.ExactlyOnce, mqtt_handlers.DeviceStartupHandler(deviceStartupRepo))
 	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.Request), mqtt2.ExactlyOnce, mqtt_handlers.RequestHandler(mqttPublisherClient))
 	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.LockOpened), mqtt2.ExactlyOnce, mqtt_handlers.LockOpenedHandler())
 	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceState), mqtt2.ExactlyOnce, mqtt_handlers.DeviceStateHandler())
