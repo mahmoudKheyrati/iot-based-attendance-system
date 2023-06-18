@@ -5,6 +5,9 @@ import (
 	"github.com/eclipse/paho.mqtt.golang"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	"google.golang.org/grpc"
+	"net"
+	"server/proto/gen/pb-go/iot/attendance_system"
 
 	"log"
 	"os"
@@ -128,6 +131,16 @@ func main() {
 		fmt.Println("device-state deviceId:", deviceId, " secondsAfterStart:", secondAfterStart, " red:", red, " green:", green, " blue:", blue)
 
 	})
+
+	listen, err := net.Listen("tcp", fmt.Sprintf(":%d", c.Port))
+	if err != nil {
+		log.Fatalln(err)
+	}
+	server := grpc.NewServer()
+	attendance_system.RegisterAttendanceSystemServer(server, nil)
+	if err := server.Serve(listen); err != nil {
+		log.Fatalf("failed to serve: %v", err)
+	}
 
 	app := fiber.New()
 	app.Use(recover.New())
