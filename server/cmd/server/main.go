@@ -20,6 +20,8 @@ import (
 )
 
 func main() {
+	// todo: add logger
+
 	c := config.NewConfig()
 
 	mqttSubscriberClient, err := mqtt2.NewMqttClient(mqtt2.Config{
@@ -63,7 +65,7 @@ func main() {
 	//attendanceLogRepo := db.NewAttendanceLogRepo(session)
 	//deviceRepo := db.NewDeviceRepo(session)
 	deviceStartupRepo := db.NewDeviceStartupRepo(session)
-	//deviceStateLogRepo := db.NewDeviceStateLogRepo(session)
+	deviceStateLogRepo := db.NewDeviceStateLogRepo(session)
 	employeeRepo := db.NewEmployeeRepo(session)
 	lockOpenedLogRepo := db.NewLockOpenedLogRepo(session)
 
@@ -71,7 +73,7 @@ func main() {
 	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceStartup), mqtt2.ExactlyOnce, mqtt_handlers.DeviceStartupHandler(deviceStartupRepo))
 	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.Request), mqtt2.ExactlyOnce, mqtt_handlers.RequestHandler(mqttPublisherClient, employeeRepo))
 	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.LockOpened), mqtt2.ExactlyOnce, mqtt_handlers.LockOpenedHandler(lockOpenedLogRepo))
-	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceState), mqtt2.ExactlyOnce, mqtt_handlers.DeviceStateHandler())
+	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceState), mqtt2.ExactlyOnce, mqtt_handlers.DeviceStateHandler(deviceStateLogRepo))
 
 	listen, err := net.Listen("tcp", fmt.Sprintf(":%d", c.Port))
 	if err != nil {

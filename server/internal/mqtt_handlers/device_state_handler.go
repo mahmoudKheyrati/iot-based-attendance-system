@@ -3,11 +3,14 @@ package mqtt_handlers
 import (
 	"fmt"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"log"
+	"server/pkg/db"
 	"strconv"
 	"strings"
+	"time"
 )
 
-func DeviceStateHandler() func(client mqtt.Client, message mqtt.Message) {
+func DeviceStateHandler(repo *db.DeviceStateLogRepo) func(client mqtt.Client, message mqtt.Message) {
 	return func(client mqtt.Client, message mqtt.Message) {
 		topic := message.Topic()
 		topicParts := strings.Split(topic, "/")
@@ -37,7 +40,19 @@ func DeviceStateHandler() func(client mqtt.Client, message mqtt.Message) {
 			return
 		}
 
-		fmt.Println("device-state deviceId:", deviceId, " secondsAfterStart:", secondAfterStart, " red:", red, " green:", green, " blue:", blue)
+		//fmt.Println("device-state deviceId:", deviceId, " secondsAfterStart:", secondAfterStart, " red:", red, " green:", green, " blue:", blue)
 
+		err = repo.Insert(db.DeviceStateLog{
+			DeviceID:            deviceId,
+			ServerTimestamp:     time.Now(),
+			TimeAfterStartupSec: secondAfterStart,
+			LedRed:              red == 1,
+			LedGreen:            green == 1,
+			LedBlue:             blue == 1,
+		})
+		if err != nil {
+			log.Println(err)
+			return
+		}
 	}
 }
