@@ -5,7 +5,6 @@ go 1.20
 require (
 	github.com/eclipse/paho.mqtt.golang v1.4.2
 	github.com/gocql/gocql v1.4.0
-	github.com/gofiber/fiber/v2 v2.46.0
 	github.com/joho/godotenv v1.5.1
 	github.com/scylladb/gocqlx/v2 v2.8.0
 	github.com/smartystreets/assertions v1.13.1
