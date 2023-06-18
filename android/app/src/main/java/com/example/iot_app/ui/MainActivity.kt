@@ -1,26 +1,45 @@
-package com.example.iot_app
+package com.example.iot_app.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.graphics.Color
+import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.example.iot_app.R
 
 import com.example.iot_app.databinding.MainActivityBinding
+import com.example.iot_app.utils.CheckConnection
+import com.example.iot_app.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+
     lateinit var binding: MainActivityBinding
-    //var rgb_state = "000"
+
+
+    private val viewModel:MainViewModel by viewModels()
+
+
+    @Inject
+    lateinit var connection:CheckConnection
+
 
     var RED_BUTTON_CLICKED = false
     var GREEN_BUTTON_CLICKED = false
     var BLUE_BUTTON_CLICKED = false
 
-    var LIGHT_COLOR = "000"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+
 
 
 
@@ -83,7 +102,7 @@ class MainActivity : AppCompatActivity() {
 
             btnSetLightColor.run {
                 setOnClickListener {
-
+                    checkConnectionAndSendRequest()
                 }
             }
 
@@ -91,6 +110,12 @@ class MainActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    private fun checkConnectionAndSendRequest() {
+        connection.observe(this){
+            //grpc codes 
+        }
     }
 
 
