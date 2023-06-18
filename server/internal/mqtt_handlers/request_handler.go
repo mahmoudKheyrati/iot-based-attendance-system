@@ -3,13 +3,15 @@ package mqtt_handlers
 import (
 	"fmt"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"log"
+	"server/pkg/db"
 	mqtt2 "server/pkg/mqtt"
 	"strconv"
 	"strings"
 	"time"
 )
 
-func RequestHandler(mqttClient mqtt.Client) func(client mqtt.Client, message mqtt.Message) {
+func RequestHandler(mqttClient mqtt.Client, repo *db.EmployeeRepo) func(client mqtt.Client, message mqtt.Message) {
 	return func(client mqtt.Client, message mqtt.Message) {
 		topic := message.Topic()
 		topicParts := strings.Split(topic, "/")
@@ -26,14 +28,25 @@ func RequestHandler(mqttClient mqtt.Client) func(client mqtt.Client, message mqt
 
 		fmt.Println("request device_id:", deviceId, " secondAfterStart:", secondAfterStart, " cardUid:", cardUid)
 
-		// check authorization and then send response
-		//lockPermitted: LOCK_OPEN_PERMITED, LOCK_OPEN_NOT_PERMITED
-		var isPermitted = true
-		lockPermitted := "LOCK_OPEN_NOT_PERMITTED"
+		employee, err := repo.GetByCardUID(cardUid)
+		if err != nil || employee == nil {
+			log.Println(err)
+			return
+		}
+		var isPermitted bool
+		for _, rule := range employee.Rules {
+			if rule == deviceId {
+				isPermitted = true
+				break
+			}
+		}
+		var lockPermitted = "LOCK_OPEN_NOT_PERMITTED"
 		if isPermitted {
 			lockPermitted = "LOCK_OPEN_PERMITTED"
+
 		}
-		lcdMessage := "your welcome mahmoud ;)"
+
+		lcdMessage := fmt.Sprintf("welcome %s %s ;)", employee.FirstName, employee.LastName)
 
 		messagePayload := fmt.Sprintf("%d,%s,%s", time.Now().Unix(), lockPermitted, lcdMessage)
 		mqttClient.Publish(fmt.Sprintf("response/%s/%s", deviceId, cardUid), mqtt2.ExactlyOnce, false, messagePayload)

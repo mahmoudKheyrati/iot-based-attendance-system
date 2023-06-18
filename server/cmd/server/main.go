@@ -64,12 +64,12 @@ func main() {
 	//deviceRepo := db.NewDeviceRepo(session)
 	deviceStartupRepo := db.NewDeviceStartupRepo(session)
 	//deviceStateLogRepo := db.NewDeviceStateLogRepo(session)
-	//employeeRepo := db.NewEmployeeRepo(session)
+	employeeRepo := db.NewEmployeeRepo(session)
 	//lockOpenedLogRepo := db.NewLockOpenedLogRepo(session)
 
 	var tn = c.TopicNames
 	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceStartup), mqtt2.ExactlyOnce, mqtt_handlers.DeviceStartupHandler(deviceStartupRepo))
-	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.Request), mqtt2.ExactlyOnce, mqtt_handlers.RequestHandler(mqttPublisherClient))
+	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.Request), mqtt2.ExactlyOnce, mqtt_handlers.RequestHandler(mqttPublisherClient, employeeRepo))
 	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.LockOpened), mqtt2.ExactlyOnce, mqtt_handlers.LockOpenedHandler())
 	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceState), mqtt2.ExactlyOnce, mqtt_handlers.DeviceStateHandler())
 

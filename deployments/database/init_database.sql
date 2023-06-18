@@ -40,7 +40,7 @@ create index if not exists on attendance_system.admin (username) with options = 
 
 create table if not exists attendance_system.employee
 (
-    card_uid     uuid,
+    card_uid     text,
     first_name   text,
     last_name    text,
     email        text,
