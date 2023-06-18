@@ -24,7 +24,7 @@ type DeviceLastStartup struct {
 	LastStartup time.Time
 }
 
-func (d *DeviceStartupRepo) InsertDeviceStartup(deviceStartup DeviceStartup) error {
+func (d *DeviceStartupRepo) Insert(deviceStartup DeviceStartup) error {
 
 	query := "INSERT INTO attendance_system.device_startup (device_id, server_timestamp, time_after_start_sec) VALUES (?, ?, ?)"
 

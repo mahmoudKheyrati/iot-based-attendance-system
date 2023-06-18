@@ -17,6 +17,10 @@ type AdminCommandLogRepo struct {
 	session *gocql.Session
 }
 
+func NewAdminCommandLogRepo(session *gocql.Session) *AdminCommandLogRepo {
+	return &AdminCommandLogRepo{session: session}
+}
+
 func (a *AdminCommandLogRepo) Insert(adminCommandLog AdminCommandLog) error {
 	// Construct the INSERT query
 	query := "INSERT INTO attendance_system.admin_commands_log (device_id, command, admin_username, command_payload, timestamp) VALUES (?, ?, ?, ?, ?)"

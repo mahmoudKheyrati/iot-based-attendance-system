@@ -46,6 +46,15 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	//adminCommandLogRepo := db.NewAdminCommandLogRepo(session)
+	//attendanceLogRepo := db.NewAttendanceLogRepo(session)
+	//deviceRepo := db.NewDeviceRepo(session)
+	//deviceStartupRepo := db.NewDeviceStartupRepo(session)
+	//deviceStateLogRepo := db.NewDeviceStateLogRepo(session)
+	//employeeRepo := db.NewEmployeeRepo(session)
+	//lockOpenedLogRepo := db.NewLockOpenedLogRepo(session)
+
 	var tn = c.TopicNames
 	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceStartup), mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
 		topic := message.Topic()

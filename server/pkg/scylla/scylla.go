@@ -3,7 +3,6 @@ package scylla
 import (
 	"fmt"
 	"github.com/gocql/gocql"
-	"github.com/scylladb/gocqlx/v2"
 )
 
 type Config struct {
@@ -14,7 +13,7 @@ type Config struct {
 	DefaultKeyspace string
 }
 
-func NewScyllaSession(config Config) (gocqlx.Session, error) {
+func NewScyllaSession(config Config) (*gocql.Session, error) {
 	cluster := gocql.NewCluster(fmt.Sprintf("%s:%d", config.Host, config.Port))
 	cluster.Keyspace = config.DefaultKeyspace
 	cluster.AuthProvider = func(h *gocql.HostInfo) (gocql.Authenticator, error) {
@@ -23,6 +22,7 @@ func NewScyllaSession(config Config) (gocqlx.Session, error) {
 			Password: config.Password,
 		}, nil
 	}
-	session, err := gocqlx.WrapSession(cluster.CreateSession())
-	return session, err
+	clusterSession, err := cluster.CreateSession()
+	//session, err := gocqlx.WrapSession(cluster.CreateSession())
+	return clusterSession, err
 }

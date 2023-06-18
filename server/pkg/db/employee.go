@@ -20,7 +20,7 @@ type EmployeeRepo struct {
 func NewEmployeeRepo(session *gocql.Session) *EmployeeRepo {
 	return &EmployeeRepo{session: session}
 }
-func (e *EmployeeRepo) InsertEmployee(employee Employee) error {
+func (e *EmployeeRepo) Insert(employee Employee) error {
 
 	query := "INSERT INTO attendance_system.employee (card_uid, first_name, last_name, email, phone_number, rules) VALUES (?, ?, ?, ?, ?, ?)"
 

@@ -18,6 +18,10 @@ type DeviceStateLogRepo struct {
 	session *gocql.Session
 }
 
+func NewDeviceStateLogRepo(session *gocql.Session) *DeviceStateLogRepo {
+	return &DeviceStateLogRepo{session: session}
+}
+
 func (d *DeviceStateLogRepo) Insert(deviceStateLog DeviceStateLog) error {
 	query := "INSERT INTO attendance_system.device_state_log (device_id, server_timestamp, time_after_startup_sec, led_red, led_green, led_blue) VALUES (?, ?, ?, ?, ?, ?)"
 
