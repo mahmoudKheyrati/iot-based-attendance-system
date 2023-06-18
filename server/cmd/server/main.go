@@ -113,21 +113,18 @@ func main() {
 		}
 	}()
 
-	// todo: add websocket to show led colors real-time and lock-opened history
-
-	fmt.Println(session)
-
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)
 	<-quit
 	fmt.Println("gracefully shutdown ...")
-	//ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	//defer cancel()
+
+	log.Println("disconnecting mqtt ...")
 	mqttClient.Disconnect(250)
+
+	log.Println("closing scylla session ...")
 	session.Close()
-	time.Sleep(3 * time.Second)
-	//if err := srv.Shutdown(ctx); err != nil {
-	//	log.Fatal(err)
-	//}
+
+	log.Println("graceful stop grpc server ...")
+	server.GracefulStop()
 
 }
