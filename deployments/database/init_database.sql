@@ -11,9 +11,16 @@ create table if not exists attendance_system.device
     primary key (id, location),
 );
 
+CREATE MATERIALIZED VIEW attendance_system.device_by_name AS
+  SELECT id, name
+  FROM attendance_system.device
+  WHERE name IS NOT NULL AND id IS NOT NULL
+  PRIMARY KEY (name, id);
+
+
 create table if not exists attendance_system.device_startup
 (
-    device_id            text,
+    device_id            uuid,
     server_timestamp     timestamp,
     time_after_start_sec int,
     primary key ( device_id, server_timestamp )
