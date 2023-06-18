@@ -68,6 +68,6 @@ service attendanceSystem {
   rpc lockOpenedHistory(LockOpenedHistoryRequest) returns (stream LockOpenedHistoryResponse);
   rpc changeLedColor(ChangeLedColorRequest) returns (ChangeLedColorResponse);
   rpc openDoor(OpenDoorRequest) returns (OpenDoorResponse);
-  rpc getDeviceIdsRequest(GetDeviceIdsRequest) returns (GetDeviceIdsResponse);
-  rpc getPresentPersonsRequest(GetPresentEmployeeRequest) returns (GetPresentEmployeeResponse);
+  rpc getAllDevices(GetDeviceIdsRequest) returns (GetDeviceIdsResponse);
+  rpc getAllPresentPersons(GetPresentEmployeeRequest) returns (GetPresentEmployeeResponse);
 }

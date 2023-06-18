@@ -29,12 +29,12 @@ func (a *AttendanceSystem) OpenDoor(ctx context.Context, request *attendance_sys
 	panic("implement me")
 }
 
-func (a *AttendanceSystem) GetDeviceIdsRequest(ctx context.Context, request *attendance_system.GetDeviceIdsRequest) (*attendance_system.GetDeviceIdsResponse, error) {
+func (a *AttendanceSystem) GetAllDevices(ctx context.Context, request *attendance_system.GetDeviceIdsRequest) (*attendance_system.GetDeviceIdsResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (a *AttendanceSystem) GetPresentPersonsRequest(ctx context.Context, request *attendance_system.GetPresentEmployeeRequest) (*attendance_system.GetPresentEmployeeResponse, error) {
+func (a *AttendanceSystem) GetAllPresentPersons(ctx context.Context, request *attendance_system.GetPresentEmployeeRequest) (*attendance_system.GetPresentEmployeeResponse, error) {
 	//TODO implement me
 	panic("implement me")
 }
