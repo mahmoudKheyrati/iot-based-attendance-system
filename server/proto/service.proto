@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package ir.mahmoud.iot_attendance_system;
 
-option go_package = ".";
+option go_package = "iot/attendance_system";
 option java_package = "ir.mahmoud.attendance_system";
 //option java_outer_classname = "Server";
 option java_multiple_files = true;
