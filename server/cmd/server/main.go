@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/eclipse/paho.mqtt.golang"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 	"google.golang.org/grpc"
 	"net"
+	"server/internal/mqtt_handlers"
 	"server/proto/gen/pb-go/iot/attendance_system"
 
 	"log"
@@ -15,8 +15,6 @@ import (
 	"server/config"
 	mqtt2 "server/pkg/mqtt"
 	"server/pkg/scylla"
-	"strconv"
-	"strings"
 	"time"
 )
 
@@ -56,90 +54,10 @@ func main() {
 	//lockOpenedLogRepo := db.NewLockOpenedLogRepo(session)
 
 	var tn = c.TopicNames
-	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceStartup), mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
-		topic := message.Topic()
-		topicParts := strings.Split(topic, "/")
-		deviceId := topicParts[1]
-		timestamp := time.Now().Unix()
-		fmt.Println("device_startup deviceId:", deviceId, " at timestamp:", timestamp)
-
-	})
-	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.Request), mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
-		topic := message.Topic()
-		topicParts := strings.Split(topic, "/")
-		deviceId := topicParts[1]
-
-		payload := string(message.Payload())
-		payloadParts := strings.Split(payload, ",")
-		secondAfterStart, err := strconv.Atoi(payloadParts[0])
-		if err != nil {
-			// log the error using zap
-			return
-		}
-		cardUid := payloadParts[1]
-
-		fmt.Println("request device_id:", deviceId, " secondAfterStart:", secondAfterStart, " cardUid:", cardUid)
-
-		// check authorization and then send response
-		//lockPermitted: LOCK_OPEN_PERMITED, LOCK_OPEN_NOT_PERMITED
-		var isPermitted = true
-		lockPermitted := "LOCK_OPEN_NOT_PERMITTED"
-		if isPermitted {
-			lockPermitted = "LOCK_OPEN_PERMITTED"
-		}
-		lcdMessage := "your welcome mahmoud ;)"
-
-		messagePayload := fmt.Sprintf("%d,%s,%s", time.Now().Unix(), lockPermitted, lcdMessage)
-		mqttClient.Publish(fmt.Sprintf("response/%s/%s", deviceId, cardUid), mqtt2.ExactlyOnce, false, messagePayload)
-	})
-	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.LockOpened), mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
-		topic := message.Topic()
-		topicParts := strings.Split(topic, "/")
-		deviceId := topicParts[1]
-
-		payload := string(message.Payload())
-		payloadParts := strings.Split(payload, ",")
-		secondAfterStart, err := strconv.Atoi(payloadParts[0])
-		if err != nil {
-			// log the error using zap
-			return
-		}
-
-		fmt.Println("lock-opened deviceId:", deviceId, " secondAfterStart:", secondAfterStart)
-
-	})
-	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceState), mqtt2.ExactlyOnce, func(client mqtt.Client, message mqtt.Message) {
-		topic := message.Topic()
-		topicParts := strings.Split(topic, "/")
-		deviceId := topicParts[1]
-
-		payload := string(message.Payload())
-		payloadParts := strings.Split(payload, ",")
-		secondAfterStart, err := strconv.Atoi(payloadParts[0])
-		if err != nil {
-			// log the error using zap
-			return
-		}
-		rgbString := strings.TrimPrefix(payloadParts[1], "LED_COLOR_")
-		red, err := strconv.Atoi(fmt.Sprintf("%c", rgbString[0]))
-		if err != nil {
-			// log the error using zap
-			return
-		}
-		green, err := strconv.Atoi(fmt.Sprintf("%c", rgbString[1]))
-		if err != nil {
-			// log the error using zap
-			return
-		}
-		blue, err := strconv.Atoi(fmt.Sprintf("%c", rgbString[2]))
-		if err != nil {
-			// log the error using zap
-			return
-		}
-
-		fmt.Println("device-state deviceId:", deviceId, " secondsAfterStart:", secondAfterStart, " red:", red, " green:", green, " blue:", blue)
-
-	})
+	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceStartup), mqtt2.ExactlyOnce, mqtt_handlers.DeviceStartupHandler())
+	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.Request), mqtt2.ExactlyOnce, mqtt_handlers.RequestHandler(mqttClient))
+	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.LockOpened), mqtt2.ExactlyOnce, mqtt_handlers.LockOpenedHandler())
+	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceState), mqtt2.ExactlyOnce, mqtt_handlers.DeviceStateHandler())
 
 	listen, err := net.Listen("tcp", fmt.Sprintf(":%d", c.Port))
 	if err != nil {
