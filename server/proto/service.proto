@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package ir.mahmoud.iot_attendance_system;
+
+option go_package = ".";
+option java_package = "ir.mahmoud.attendance_system";
+//option java_outer_classname = "Server";
+option java_multiple_files = true;
+
+
+message LedColorRequest {
+  string device_id = 1;
+}
+message LedColorResponse {
+  int32 red = 1;
+  int32 green = 2;
+  int32  blue = 3;
+}
+message LockOpenedHistoryRequest {
+  string device_id = 1;
+}
+message LockOpenedHistoryResponse {
+  int64 unix_timestamp = 1 ;
+  string first_name = 2;
+  string last_name = 3 ;
+}
+
+message ChangeLedColorRequest {
+  int32 red = 1;
+  int32 green = 2;
+  int32  blue = 3;
+}
+message ChangeLedColorResponse {
+  int32 status = 1 ;
+}
+
+message OpenDoorRequest{
+
+}
+message OpenDoorResponse {
+  int32 status = 1;
+}
+
+message GetDeviceIdsRequest {
+
+}
+message Device {
+  string device_id = 1 ;
+
+}
+message GetDeviceIdsResponse {
+  repeated Device devices = 1;
+}
+
+message Employee {
+  string first_name = 1 ;
+  string last_name = 2;
+}
+message GetPresentEmployeeRequest {
+
+}
+message GetPresentEmployeeResponse {
+  repeated Employee employees = 1;
+}
+
+service attendanceSystem {
+  rpc ledColor(LedColorRequest) returns (stream LedColorResponse);
+  rpc lockOpenedHistory(LockOpenedHistoryRequest) returns (stream LockOpenedHistoryResponse);
+  rpc changeLedColor(ChangeLedColorRequest) returns (ChangeLedColorResponse);
+  rpc openDoor(OpenDoorRequest) returns (OpenDoorResponse);
+  rpc getDeviceIdsRequest(GetDeviceIdsRequest) returns (GetDeviceIdsResponse);
+  rpc getPresentPersonsRequest(GetPresentEmployeeRequest) returns (GetPresentEmployeeResponse);
+}
