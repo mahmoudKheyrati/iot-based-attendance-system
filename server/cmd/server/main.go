@@ -21,10 +21,23 @@ import (
 func main() {
 	c := config.NewConfig()
 
-	mqttClient, err := mqtt2.NewMqttClient(mqtt2.Config{
+	mqttSubscriberClient, err := mqtt2.NewMqttClient(mqtt2.Config{
 		Host:           c.MqttBrokerConfig.Host,
 		Port:           c.MqttBrokerConfig.Port,
-		ClientId:       c.MqttBrokerConfig.ClientId,
+		ClientId:       c.MqttBrokerConfig.ClientId + "-subscriber",
+		Username:       c.MqttBrokerConfig.Username,
+		Password:       c.MqttBrokerConfig.Password,
+		KeepAliveSec:   c.MqttBrokerConfig.KeepAliveSec,
+		PingTimeoutSec: c.MqttBrokerConfig.PingTimeoutSec,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	mqttPublisherClient, err := mqtt2.NewMqttClient(mqtt2.Config{
+		Host:           c.MqttBrokerConfig.Host,
+		Port:           c.MqttBrokerConfig.Port,
+		ClientId:       c.MqttBrokerConfig.ClientId + "-publisher",
 		Username:       c.MqttBrokerConfig.Username,
 		Password:       c.MqttBrokerConfig.Password,
 		KeepAliveSec:   c.MqttBrokerConfig.KeepAliveSec,
@@ -54,10 +67,10 @@ func main() {
 	//lockOpenedLogRepo := db.NewLockOpenedLogRepo(session)
 
 	var tn = c.TopicNames
-	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceStartup), mqtt2.ExactlyOnce, mqtt_handlers.DeviceStartupHandler())
-	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.Request), mqtt2.ExactlyOnce, mqtt_handlers.RequestHandler(mqttClient))
-	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.LockOpened), mqtt2.ExactlyOnce, mqtt_handlers.LockOpenedHandler())
-	mqttClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceState), mqtt2.ExactlyOnce, mqtt_handlers.DeviceStateHandler())
+	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceStartup), mqtt2.ExactlyOnce, mqtt_handlers.DeviceStartupHandler())
+	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.Request), mqtt2.ExactlyOnce, mqtt_handlers.RequestHandler(mqttPublisherClient))
+	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.LockOpened), mqtt2.ExactlyOnce, mqtt_handlers.LockOpenedHandler())
+	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceState), mqtt2.ExactlyOnce, mqtt_handlers.DeviceStateHandler())
 
 	listen, err := net.Listen("tcp", fmt.Sprintf(":%d", c.Port))
 	if err != nil {
@@ -92,11 +105,11 @@ func main() {
 		switch body.Command {
 		case "open-door":
 			payloadOpenDoor := fmt.Sprintf("%d,%s", time.Now().Unix(), "LOCK_OPEN_PERMITTED")
-			mqttClient.Publish(fmt.Sprintf("%s/%s", tn.AdminCommand, body.DeviceId), mqtt2.ExactlyOnce, false, payloadOpenDoor)
+			mqttSubscriberClient.Publish(fmt.Sprintf("%s/%s", tn.AdminCommand, body.DeviceId), mqtt2.ExactlyOnce, false, payloadOpenDoor)
 
 		case "change-led-color":
 			payloadLedChangeColor := fmt.Sprintf("%d,LED_CHANGE_COLOR_%d%d%d", time.Now().Unix(), body.R, body.G, body.B)
-			mqttClient.Publish(fmt.Sprintf("%s/%s", tn.AdminCommand, body.DeviceId), mqtt2.ExactlyOnce, false, payloadLedChangeColor)
+			mqttSubscriberClient.Publish(fmt.Sprintf("%s/%s", tn.AdminCommand, body.DeviceId), mqtt2.ExactlyOnce, false, payloadLedChangeColor)
 
 		default:
 
@@ -119,7 +132,7 @@ func main() {
 	fmt.Println("gracefully shutdown ...")
 
 	log.Println("disconnecting mqtt ...")
-	mqttClient.Disconnect(250)
+	mqttSubscriberClient.Disconnect(250)
 
 	log.Println("closing scylla session ...")
 	session.Close()
