@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"google.golang.org/grpc"
 	"net"
+	"server/api"
 	"server/internal/mqtt_handlers"
 	"server/pkg/db"
 	"server/proto/gen/pb-go/iot/attendance_system"
@@ -60,9 +61,9 @@ func main() {
 		panic(err)
 	}
 
-	//adminCommandLogRepo := db.NewAdminCommandLogRepo(session)
-	//attendanceLogRepo := db.NewAttendanceLogRepo(session)
-	//deviceRepo := db.NewDeviceRepo(session)
+	adminCommandLogRepo := db.NewAdminCommandLogRepo(session)
+	attendanceLogRepo := db.NewAttendanceLogRepo(session)
+	deviceRepo := db.NewDeviceRepo(session)
 	deviceStartupRepo := db.NewDeviceStartupRepo(session)
 	deviceStateLogRepo := db.NewDeviceStateLogRepo(session)
 	employeeRepo := db.NewEmployeeRepo(session)
@@ -79,9 +80,22 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	attendanceSystem := api.NewAttendanceSystem(api.AttendanceSystemConfig{
+		AdminCommandLogRepo: adminCommandLogRepo,
+		AttendanceLogRepo:   attendanceLogRepo,
+		DeviceRepo:          deviceRepo,
+		DeviceStartupRepo:   deviceStartupRepo,
+		DeviceStateLogRepo:  deviceStateLogRepo,
+		EmployeeRepo:        employeeRepo,
+		LockOpenedLogRepo:   lockOpenedLogRepo,
+		MqttPublisherClient: mqttPublisherClient,
+		Config:              c,
+	})
+
 	server := grpc.NewServer()
 	reflection.Register(server)
-	attendance_system.RegisterAttendanceSystemServer(server, nil)
+	attendance_system.RegisterAttendanceSystemServer(server, attendanceSystem)
 	if err := server.Serve(listen); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
