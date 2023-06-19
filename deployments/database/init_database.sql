@@ -1,6 +1,8 @@
 create keyspace if not exists attendance_system with replication = {'class': 'NetworkTopologyStrategy', 'replication_factor': 1};
 
-create type if not exists Point(lat double, long double);
+use attendance_system; 
+
+create type if not exists attendance_system.Point(lat double, long double);
 
 create table if not exists attendance_system.device
 (
@@ -8,7 +10,7 @@ create table if not exists attendance_system.device
     name     text,
     location Point,
     rules    set<text>,
-    primary key (id, location),
+    primary key (id),
 );
 
 CREATE MATERIALIZED VIEW attendance_system.device_by_name AS
@@ -36,7 +38,6 @@ create table if not exists attendance_system.admin
     rules           set<text>,
     primary key ( username, password_hash)
 );
-create index if not exists on attendance_system.admin (username) with options = {'unique': 'true'};
 
 create table if not exists attendance_system.employee
 (
@@ -48,7 +49,6 @@ create table if not exists attendance_system.employee
     rules        set<text>,
     primary key ( card_uid )
 );
-create index if not exists on attendance_system.employee (card_uid) with options = {'unique': 'true'};
 
 create table if not exists attendance_system.attendance_log
 (
@@ -67,15 +67,15 @@ create table attendance_system.admin_commands_log
     admin_username text,
     command_payload text,
     timestamp      timestamp,
-    primary key (device_id,command)
-) with clustering order by (timestamp asc);
+    primary key (device_id,command,admin_username)
+) with clustering order by (command asc , admin_username asc );
 
 create table if not exists attendance_system.lock_opened_log
 (
     device_id              text,
     server_timestamp       timestamp,
     time_after_startup_sec int,
-    primary key ( device_id )
+    primary key ( device_id ,server_timestamp, time_after_startup_sec)
 )with clustering order by (server_timestamp asc ,  time_after_startup_sec asc );
 
 create table if not exists attendance_system.device_state_log
@@ -86,6 +86,6 @@ create table if not exists attendance_system.device_state_log
     led_red                boolean,
     led_green              boolean,
     led_blue               boolean,
-    primary key ( device_id )
+    primary key ( device_id ,server_timestamp,time_after_startup_sec)
 ) with clustering order by (server_timestamp asc , time_after_startup_sec asc );
 

@@ -6,6 +6,8 @@ services:
     container_name: scylla-node1
     image: scylladb/scylla:5.1.0
     restart: always
+    volumes:
+      - "node-1:/var/lib/scylla"
     command: --seeds=scylla-node1 --smp 1 --memory 750M --overprovisioned 1 --api-address 0.0.0.0
     # command: --seeds=scylla-node1,scylla-node2,scylla-node3 --smp 1 --memory 750M --overprovisioned 1 --api-address 0.0.0.0
     ports:
@@ -28,3 +30,5 @@ services:
   #     - scylla-node1
   #     - scylla-node2
 
+volumes:
+  node-1: 
