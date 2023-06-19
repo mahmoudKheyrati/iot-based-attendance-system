@@ -13,6 +13,8 @@ create table if not exists attendance_system.device
     primary key (id),
 );
 
+insert into attendance_system.device(id, location, name, rules) VALUES (uuid(),(0,0), 'esp32-1',{});
+
 CREATE MATERIALIZED VIEW attendance_system.device_by_name AS
   SELECT id, name
   FROM attendance_system.device
@@ -49,6 +51,9 @@ create table if not exists attendance_system.employee
     rules        set<text>,
     primary key ( card_uid )
 );
+insert into attendance_system.employee(card_uid, email, first_name, last_name, phone_number, rules) VALUES ('afeef','mahmoud.kheyrati.fard@gmail.com', 'mahmoud reza', 'kheyrati fard', '+989384892109',{'42564aa8-2119-4ad9-b430-5ad89d90bf75'});
+insert into attendance_system.employee(card_uid, email, first_name, last_name, phone_number, rules) VALUES ('fsdfsf','yasinrezaie@gmail.com', 'yasin', 'rezaie', '+9898888888',{'42564aa8-2119-4ad9-b430-5ad89d90bf75'});
+insert into attendance_system.employee(card_uid, email, first_name, last_name, phone_number, rules) VALUES ('vsdf','arlotfi79@gmail.com', 'alireza', 'lotfi', '+9890000000',{});
 
 create table if not exists attendance_system.attendance_log
 (

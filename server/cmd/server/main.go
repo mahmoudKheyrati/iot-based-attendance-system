@@ -96,9 +96,12 @@ func main() {
 	server := grpc.NewServer()
 	reflection.Register(server)
 	attendance_system.RegisterAttendanceSystemServer(server, attendanceSystem)
-	if err := server.Serve(listen); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
+	go func() {
+		if err := server.Serve(listen); err != nil {
+			log.Fatalf("failed to serve: %v", err)
+		}
+
+	}()
 
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)
