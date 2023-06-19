@@ -45,6 +45,7 @@ message OpenDoorResponse {
 }
 
 message GetDeviceIdsRequest {
+  string device_id = 1;
 
 }
 message Device {
