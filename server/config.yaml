@@ -13,7 +13,7 @@ scylla:
   port: 9042
   username: cassandra
   password: cassandra
-  default_keyspace: attendance
+  default_keyspace: attendance_system
 
 mqtt_broker:
   host: localhost
