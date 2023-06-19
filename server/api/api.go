@@ -46,7 +46,8 @@ func (a *AttendanceSystem) LedColor(request *attendance_system.LedColorRequest, 
 		case <-ticker.C:
 			state, err := a.DeviceStateLogRepo.GetLatestStateByDeviceID(request.DeviceId)
 			if err != nil {
-				return err
+				log.Println(err)
+				return errors.New("internal server error")
 			}
 			var red int32
 			var green int32
