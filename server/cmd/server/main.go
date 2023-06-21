@@ -71,7 +71,7 @@ func main() {
 
 	var tn = c.TopicNames
 	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceStartup), mqtt2.ExactlyOnce, mqtt_handlers.DeviceStartupHandler(deviceStartupRepo))
-	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.Request), mqtt2.ExactlyOnce, mqtt_handlers.RequestHandler(mqttPublisherClient, employeeRepo))
+	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.Request), mqtt2.ExactlyOnce, mqtt_handlers.RequestHandler(mqttPublisherClient, employeeRepo, attendanceLogRepo))
 	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.LockOpened), mqtt2.ExactlyOnce, mqtt_handlers.LockOpenedHandler(lockOpenedLogRepo))
 	mqttSubscriberClient.Subscribe(fmt.Sprintf("%s/+", tn.DeviceState), mqtt2.ExactlyOnce, mqtt_handlers.DeviceStateHandler(deviceStateLogRepo))
 

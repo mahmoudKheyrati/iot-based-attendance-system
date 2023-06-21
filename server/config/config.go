@@ -62,7 +62,7 @@ func NewConfig() *Config {
 				DeviceStartup: viper.GetString("topic_names.device_startup"),
 				Request:       viper.GetString("topic_names.request"),
 				LockOpened:    viper.GetString("topic_names.lock_opened"),
-				DeviceState:   viper.GetString("topic_names.device_status"),
+				DeviceState:   viper.GetString("topic_names.device_state"),
 				AdminCommand:  viper.GetString("topic_names.admin_command"),
 				Response:      viper.GetString("topic_names.response"),
 			},

@@ -15,10 +15,13 @@ namespace RELAY {
     bool isOpen(); 
 
     bool state ;
+    char lockOpenedTopicTemplate[100]; 
+    char content[50]; 
 
 
     void setup() {
         pinMode(RELAY_PIN, OUTPUT);
+        sprintf(lockOpenedTopicTemplate, "%s/%s", LOCK_OPENED_TOPIC, DEVICE_ID); 
         close();
     }
 
@@ -31,10 +34,12 @@ namespace RELAY {
         state = false;
     }
 
-    void openDoor(int delay) { 
+    void openDoor(int delay, String cardUid) { 
         RELAY::open(); 
         SCHEDULER::schedule({delay, close}); 
-        MQTT::publish(LOCK_OPENED_TOPIC, String(time(NULL)).c_str()); 
+        sprintf(content, "%s,%s", cardUid.c_str(), String(time(NULL)));
+        
+        MQTT::publish(lockOpenedTopicTemplate, content); 
     }
 
     bool isOpen() {

@@ -28,7 +28,9 @@ void setup() {
     LCD::setup(); 
     REPORT::setup(); 
 
+    
     sendStartupMessage(); 
+  
     subscribeToMqttTopics(); 
     registerMqttHandlers(); 
 
@@ -43,20 +45,14 @@ void loop(){
   REPORT::loop(); 
   String uid = RFID::uid(); 
   // Serial.println("here"); 
-  if (uid != "") { 
+  if (uid != "") {
+    Serial.print("read card with uid: "); 
     Serial.println(uid); 
-    LCD::clearDisplay(); 
-    LCD::setCursor(0,0); 
-    LCD::showString("Mahmoud && Yasin ;)", 1);
-    LCD::showString("\n\n", 1 );
-    LCD::showString("CardID: ", 1);
-    LCD::showString(uid, 1); 
+
 
     char message[50]; 
     sprintf(message, "%s,%s", String(time(NULL)).c_str(), uid ); 
     MQTT::publish(requestTopicTemplate, message); 
-
-    SCHEDULER::schedule({1000, LCD::clearDisplay}); 
 
   }
     
@@ -64,40 +60,50 @@ void loop(){
 
 void sendStartupMessage() { 
   char startUpMessageTemplate[100];
-  sprintf(startUpMessageTemplate, "%s/%s", startUpMessageTemplate, DEVICE_ID); 
+  sprintf(startUpMessageTemplate, "%s/%s", DEVICE_STARTUP_TOPIC, DEVICE_ID); 
+  Serial.print("startup topic: "); 
+  Serial.println(startUpMessageTemplate); 
   MQTT::publish(startUpMessageTemplate, ""); 
 }
 
 void subscribeToMqttTopics() { 
 char adminCommandTopicTemplate[100]; 
     sprintf(adminCommandTopicTemplate, "%s/%s", ADMIN_COMMAND_TOPIC,DEVICE_ID); 
+    Serial.print("admin command topic: "); 
+    Serial.println(adminCommandTopicTemplate); 
+
     Serial.println(adminCommandTopicTemplate); 
 
     char responseTopicTemplate[100];
     sprintf(responseTopicTemplate, "%s/%s/+", RESPONSE_TOPIC, DEVICE_ID); 
+    Serial.print("response topic: "); 
+    Serial.println(responseTopicTemplate); 
 
     MQTT::subscribe(adminCommandTopicTemplate);
     MQTT::subscribe(responseTopicTemplate);  
-    MQTT::subscribe("alaki");
 
 }
 
 void registerMqttHandlers() {
 
     HANDLER::registerHandler({"response", [](String topic, String payload) {
-      String parts[3]; 
-      splitString(payload, ',',parts, 3); 
+      String topicParts[3]; 
+      splitString(topic, '/', topicParts, 3); 
+      String cardUid = topicParts[2];
 
-      String timestamp = parts[0]; 
-      String permited = parts[1]; 
-      String lcdMessage = parts[2]; 
+      String payloadParts[3]; 
+      splitString(payload, ',',payloadParts, 3); 
+
+      String timestamp = payloadParts[0]; 
+      String permited = payloadParts[1]; 
+      String lcdMessage = payloadParts[2]; 
 
       LED::setNoColor(); 
 
       if (permited == "LOCK_OPEN_PERMITTED") { 
         LED::on(LED::GREEN); 
         
-        RELAY::openDoor(2000); 
+        RELAY::openDoor(2000, cardUid); 
       }else if (permited == "LOCK_OPEN_NOT_PERMITTED") { 
         LED::on(LED::RED); 
         RELAY::close();
@@ -107,7 +113,7 @@ void registerMqttHandlers() {
 
       LCD::clearDisplay(); 
       LCD::setCursor(0,0); 
-      LCD::showString("Mahmoud && Yasin ;)", 1);
+      LCD::showString("Attendance System", 1);
       LCD::showString("\n\n", 1 );
       LCD::showString(lcdMessage, 1);
       // LCD::showString(uid, 1); 
@@ -127,8 +133,8 @@ void registerMqttHandlers() {
         Serial.print("lock-open command with timestamp "); 
         Serial.print(timestamp); 
         Serial.println(""); 
-
-        RELAY::openDoor(2000); 
+        // todo: fix admin
+        RELAY::openDoor(2000, "admin"); 
 
       }else if (command.startsWith("LED_CHANGE_COLOR")){ 
         String commandParts[4]; 

@@ -18,7 +18,7 @@ func DeviceStartupHandler(repo *db.DeviceStartupRepo) func(client mqtt.Client, m
 		if err != nil {
 			log.Println(err)
 		}
-		//fmt.Println("device_startup deviceId:", deviceId, " at timestamp:", timestamp)
+		log.Println("device_startup deviceId:", deviceId, " at timestamp:", time.Now())
 
 		err = repo.Insert(db.DeviceStartup{
 			DeviceID:          deviceId,

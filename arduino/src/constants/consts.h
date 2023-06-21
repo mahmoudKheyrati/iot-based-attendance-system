@@ -1,6 +1,6 @@
 #pragma once 
 
-const char* DEVICE_ID = "esp32-1"; 
+const char* DEVICE_ID = "42564aa8-2119-4ad9-b430-5ad89d90bf75"; 
 const int REPORT_INTERVAL_MILLI_SEC = 2000; 
 
 const char* DEVICE_STARTUP_TOPIC = "device_startup";
