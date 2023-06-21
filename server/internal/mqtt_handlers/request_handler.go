@@ -41,12 +41,13 @@ func RequestHandler(mqttClient mqtt.Client, repo *db.EmployeeRepo) func(client m
 			}
 		}
 		var lockPermitted = "LOCK_OPEN_NOT_PERMITTED"
+		lcdMessage := fmt.Sprintf("not permitted\n\n%s %s !", employee.FirstName, employee.LastName)
+
 		if isPermitted {
 			lockPermitted = "LOCK_OPEN_PERMITTED"
+			lcdMessage = fmt.Sprintf("welcome\n\n%s\n\n%s ;)", employee.FirstName, employee.LastName)
 
 		}
-
-		lcdMessage := fmt.Sprintf("welcome %s %s ;)", employee.FirstName, employee.LastName)
 
 		messagePayload := fmt.Sprintf("%d,%s,%s", time.Now().Unix(), lockPermitted, lcdMessage)
 		mqttClient.Publish(fmt.Sprintf("response/%s/%s", deviceId, cardUid), mqtt2.ExactlyOnce, false, messagePayload)
