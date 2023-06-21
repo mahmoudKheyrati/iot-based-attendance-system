@@ -138,6 +138,19 @@ func (a *AttendanceSystem) ChangeLedColor(ctx context.Context, request *attendan
 
 func (a *AttendanceSystem) OpenDoor(ctx context.Context, request *attendance_system.OpenDoorRequest) (*attendance_system.OpenDoorResponse, error) {
 	payloadOpenDoor := fmt.Sprintf("%d,%s", time.Now().Unix(), "LOCK_OPEN_PERMITTED")
+
+	err := a.AdminCommandLogRepo.Insert(db.AdminCommandLog{
+		DeviceID:       request.DeviceId,
+		Command:        "open_door",
+		AdminUsername:  "admin", // todo: fix that
+		CommandPayload: payloadOpenDoor,
+		Timestamp:      time.Now(),
+	})
+	if err != nil {
+		log.Println(err)
+		return nil, errors.New("internal server error")
+	}
+
 	token := a.MqttPublisherClient.Publish(fmt.Sprintf("%s/%s", a.Config.TopicNames.AdminCommand, request.DeviceId), mqtt2.ExactlyOnce, false, payloadOpenDoor)
 	token.Wait()
 	if err := token.Error(); err != nil {
