@@ -17,7 +17,8 @@ func LockOpenedHandler(repo *db.LockOpenedLogRepo) func(client mqtt.Client, mess
 
 		payload := string(message.Payload())
 		payloadParts := strings.Split(payload, ",")
-		secondAfterStart, err := strconv.Atoi(payloadParts[0])
+		cardUid := payloadParts[0]
+		secondAfterStart, err := strconv.Atoi(payloadParts[1])
 		if err != nil {
 			// log the error using zap
 			return
@@ -26,6 +27,7 @@ func LockOpenedHandler(repo *db.LockOpenedLogRepo) func(client mqtt.Client, mess
 		log.Println("lock-opened deviceId:", deviceId, " secondAfterStart:", secondAfterStart)
 		err = repo.Insert(db.LockOpenedLog{
 			DeviceID:            deviceId,
+			CardUid:             cardUid,
 			ServerTimestamp:     time.Now(),
 			TimeAfterStartupSec: secondAfterStart,
 		})

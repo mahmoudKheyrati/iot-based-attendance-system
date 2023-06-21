@@ -7,6 +7,7 @@ import (
 
 type LockOpenedLog struct {
 	DeviceID            string
+	CardUid             string
 	ServerTimestamp     time.Time
 	TimeAfterStartupSec int
 }
@@ -21,23 +22,23 @@ func NewLockOpenedLogRepo(session *gocql.Session) *LockOpenedLogRepo {
 
 func (l *LockOpenedLogRepo) Insert(lockOpenedLog LockOpenedLog) error {
 	// Construct the INSERT query
-	query := "INSERT INTO attendance_system.lock_opened_log (device_id, server_timestamp, time_after_startup_sec) VALUES (?, ?, ?)"
+	query := "INSERT INTO attendance_system.lock_opened_log (device_id, card_uid, server_timestamp, time_after_startup_sec) VALUES (?,?, ?, ?)"
 
 	// Execute the query with the given lock opened log data
-	err := l.session.Query(query, lockOpenedLog.DeviceID, lockOpenedLog.ServerTimestamp, lockOpenedLog.TimeAfterStartupSec).Exec()
+	err := l.session.Query(query, lockOpenedLog.DeviceID, lockOpenedLog.CardUid, lockOpenedLog.ServerTimestamp, lockOpenedLog.TimeAfterStartupSec).Exec()
 	return err
 }
 
 func (l *LockOpenedLogRepo) GetByDeviceID(deviceID string) ([]LockOpenedLog, error) {
 	// Construct the SELECT query
-	query := "SELECT device_id, server_timestamp, time_after_startup_sec FROM attendance_system.lock_opened_log WHERE device_id = ? ORDER BY server_timestamp ASC, time_after_startup_sec ASC"
+	query := "SELECT device_id, card_uid, server_timestamp, time_after_startup_sec FROM attendance_system.lock_opened_log WHERE device_id = ? ORDER BY server_timestamp ASC, time_after_startup_sec ASC"
 
 	// Execute the query with the given device ID
 	var lockOpenedLogs []LockOpenedLog
 	iter := l.session.Query(query, deviceID).Iter()
 	for {
 		var lockOpenedLog LockOpenedLog
-		if !iter.Scan(&lockOpenedLog.DeviceID, &lockOpenedLog.ServerTimestamp, &lockOpenedLog.TimeAfterStartupSec) {
+		if !iter.Scan(&lockOpenedLog.DeviceID, &lockOpenedLog.CardUid, &lockOpenedLog.ServerTimestamp, &lockOpenedLog.TimeAfterStartupSec) {
 			break
 		}
 		lockOpenedLogs = append(lockOpenedLogs, lockOpenedLog)
