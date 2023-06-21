@@ -26,7 +26,7 @@ func RequestHandler(mqttClient mqtt.Client, repo *db.EmployeeRepo) func(client m
 		}
 		cardUid := payloadParts[1]
 
-		fmt.Println("request device_id:", deviceId, " secondAfterStart:", secondAfterStart, " cardUid:", cardUid)
+		log.Println("request device_id:", deviceId, " secondAfterStart:", secondAfterStart, " cardUid:", cardUid)
 
 		employee, err := repo.GetByCardUID(cardUid)
 		if err != nil || employee == nil {

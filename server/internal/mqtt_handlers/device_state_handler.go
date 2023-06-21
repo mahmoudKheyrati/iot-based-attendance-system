@@ -40,7 +40,7 @@ func DeviceStateHandler(repo *db.DeviceStateLogRepo) func(client mqtt.Client, me
 			return
 		}
 
-		//fmt.Println("device-state deviceId:", deviceId, " secondsAfterStart:", secondAfterStart, " red:", red, " green:", green, " blue:", blue)
+		log.Println("device-state deviceId:", deviceId, " secondsAfterStart:", secondAfterStart, " red:", red, " green:", green, " blue:", blue)
 
 		err = repo.Insert(db.DeviceStateLog{
 			DeviceID:            deviceId,

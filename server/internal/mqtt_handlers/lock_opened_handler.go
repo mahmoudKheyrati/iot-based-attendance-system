@@ -23,7 +23,7 @@ func LockOpenedHandler(repo *db.LockOpenedLogRepo) func(client mqtt.Client, mess
 			return
 		}
 
-		//fmt.Println("lock-opened deviceId:", deviceId, " secondAfterStart:", secondAfterStart)
+		log.Println("lock-opened deviceId:", deviceId, " secondAfterStart:", secondAfterStart)
 		err = repo.Insert(db.LockOpenedLog{
 			DeviceID:            deviceId,
 			ServerTimestamp:     time.Now(),
