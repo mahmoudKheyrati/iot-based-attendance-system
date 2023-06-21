@@ -5,7 +5,7 @@ import (
 )
 
 type Employee struct {
-	CardUID     gocql.UUID
+	CardUID     string
 	FirstName   string
 	LastName    string
 	Email       string
