@@ -133,6 +133,16 @@ void registerMqttHandlers() {
         Serial.print("lock-open command with timestamp "); 
         Serial.print(timestamp); 
         Serial.println(""); 
+        
+        LCD::clearDisplay(); 
+        LCD::setCursor(0,0); 
+        LCD::showString("Attendance System", 1);
+        LCD::showString("\n\n", 1 );
+        LCD::showString("Lock opened by admin", 1);
+        // LCD::showString(uid, 1); 
+
+        SCHEDULER::schedule({2000, LCD::clearDisplay}); 
+
         // todo: fix admin
         RELAY::openDoor(2000, "admin"); 
 
