@@ -4,9 +4,10 @@ use attendance_system;
 
 create type if not exists attendance_system.Point(lat double, long double);
 
+
 create table if not exists attendance_system.device
 (
-    id       uuid,
+    id       text,
     name     text,
     location Point,
     rules    set<text>,
@@ -14,7 +15,7 @@ create table if not exists attendance_system.device
 );
 
 insert into attendance_system.device(id, location, name, rules)
-VALUES (uuid(), (0, 0), 'esp32-1', {});
+VALUES ('42564aa8-2119-4ad9-b430-5ad89d90bf75', (0, 0), 'esp32-1', {});
 
 CREATE MATERIALIZED VIEW attendance_system.device_by_name AS
 SELECT id, name
@@ -26,7 +27,7 @@ PRIMARY KEY (name, id);
 
 create table if not exists attendance_system.device_startup
 (
-    device_id            uuid,
+    device_id            text,
     server_timestamp     timestamp,
     time_after_start_sec int,
     primary key ( device_id, server_timestamp )
@@ -34,7 +35,7 @@ create table if not exists attendance_system.device_startup
 
 create table if not exists attendance_system.admin
 (
-    username        uuid,
+    username        text,
     password_hash   text,
     first_name      text,
     last_name       text,

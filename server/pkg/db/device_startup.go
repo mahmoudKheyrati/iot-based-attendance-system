@@ -6,7 +6,7 @@ import (
 )
 
 type DeviceStartup struct {
-	DeviceID          gocql.UUID
+	DeviceID          string
 	ServerTimestamp   time.Time
 	TimeAfterStartSec int
 }
@@ -32,12 +32,7 @@ func (d *DeviceStartupRepo) Insert(deviceStartup DeviceStartup) error {
 	return err
 }
 
-func (d *DeviceStartupRepo) GetDeviceLastStartupById(dId string) (time.Time, int, error) {
-
-	deviceId, err := gocql.UUIDFromBytes([]byte(dId))
-	if err != nil {
-		return time.Time{}, 0, err
-	}
+func (d *DeviceStartupRepo) GetDeviceLastStartupById(deviceId string) (time.Time, int, error) {
 
 	query := "SELECT server_timestamp, time_after_start_sec FROM attendance_system.device_startup WHERE device_id = ? ORDER BY server_timestamp DESC LIMIT 1"
 
@@ -50,6 +45,6 @@ func (d *DeviceStartupRepo) GetDeviceLastStartupById(dId string) (time.Time, int
 		lastStartup = lastStartup.Add(time.Duration(timeAfterStartSec) * time.Second)
 	}
 
-	err = iter.Close()
+	err := iter.Close()
 	return lastStartup, timeAfterStartSec, err
 }
