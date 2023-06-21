@@ -116,6 +116,17 @@ func (a *AttendanceSystem) LockOpenedHistory(request *attendance_system.LockOpen
 func (a *AttendanceSystem) ChangeLedColor(ctx context.Context, request *attendance_system.ChangeLedColorRequest) (*attendance_system.ChangeLedColorResponse, error) {
 	payloadLedChangeColor := fmt.Sprintf("%d,LED_CHANGE_COLOR_%d%d%d", time.Now().Unix(), request.Red, request.Green, request.Blue)
 
+	err := a.AdminCommandLogRepo.Insert(db.AdminCommandLog{
+		DeviceID:       request.DeviceId,
+		Command:        "change_led_color",
+		AdminUsername:  "admin", // todo: fix that
+		CommandPayload: payloadLedChangeColor,
+		Timestamp:      time.Now(),
+	})
+	if err != nil {
+		log.Println(err)
+		return nil, errors.New("internal server error")
+	}
 	token := a.MqttPublisherClient.Publish(fmt.Sprintf("%s/%s", a.Config.TopicNames.AdminCommand, request.DeviceId), mqtt2.ExactlyOnce, false, payloadLedChangeColor)
 	token.Wait()
 	if err := token.Error(); err != nil {
