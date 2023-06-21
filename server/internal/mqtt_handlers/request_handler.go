@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func RequestHandler(mqttClient mqtt.Client, repo *db.EmployeeRepo) func(client mqtt.Client, message mqtt.Message) {
+func RequestHandler(mqttClient mqtt.Client, employeeRepo *db.EmployeeRepo, attendanceLogRepo *db.AttendanceLogRepo) func(client mqtt.Client, message mqtt.Message) {
 	return func(client mqtt.Client, message mqtt.Message) {
 		topic := message.Topic()
 		topicParts := strings.Split(topic, "/")
@@ -28,7 +28,7 @@ func RequestHandler(mqttClient mqtt.Client, repo *db.EmployeeRepo) func(client m
 
 		log.Println("request device_id:", deviceId, " secondAfterStart:", secondAfterStart, " cardUid:", cardUid)
 
-		employee, err := repo.GetByCardUID(cardUid)
+		employee, err := employeeRepo.GetByCardUID(cardUid)
 		if err != nil || employee == nil {
 			log.Println(err)
 			return
@@ -40,16 +40,33 @@ func RequestHandler(mqttClient mqtt.Client, repo *db.EmployeeRepo) func(client m
 				break
 			}
 		}
-		var lockPermitted = "LOCK_OPEN_NOT_PERMITTED"
-		lcdMessage := fmt.Sprintf("not permitted\n\n%s %s !", employee.FirstName, employee.LastName)
+		var (
+			lockPermitted = "LOCK_OPEN_NOT_PERMITTED"
+			lcdMessage    = fmt.Sprintf("not permitted\n\n%s %s !", employee.FirstName, employee.LastName)
+			action        = "lock_close"
+		)
 
 		if isPermitted {
 			lockPermitted = "LOCK_OPEN_PERMITTED"
 			lcdMessage = fmt.Sprintf("welcome\n\n%s\n\n%s ;)", employee.FirstName, employee.LastName)
+			action = "lock_open"
 
 		}
 
 		messagePayload := fmt.Sprintf("%d,%s,%s", time.Now().Unix(), lockPermitted, lcdMessage)
+
+		err = attendanceLogRepo.Insert(db.AttendanceLog{
+			Timestamp:       time.Now(),
+			DeviceID:        deviceId,
+			CardUID:         cardUid,
+			Action:          action,
+			ResponsePayload: messagePayload,
+		})
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
 		mqttClient.Publish(fmt.Sprintf("response/%s/%s", deviceId, cardUid), mqtt2.ExactlyOnce, false, messagePayload)
 	}
 }

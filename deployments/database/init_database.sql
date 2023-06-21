@@ -66,7 +66,7 @@ create table if not exists attendance_system.attendance_log
 (
     timestamp        timestamp,
     device_id        text,
-    card_uid         uuid,
+    card_uid         text,
     action           text,
     response_payload text,
     primary key ( timestamp, device_id, card_uid )

@@ -8,7 +8,7 @@ import (
 type AttendanceLog struct {
 	Timestamp       time.Time
 	DeviceID        string
-	CardUID         gocql.UUID
+	CardUID         string
 	Action          string
 	ResponsePayload string
 }
