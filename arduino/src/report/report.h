@@ -7,7 +7,7 @@
 
 namespace REPORT { 
     int last_report_millis = 0;
-    char deviceStateTopicTemplate[50]; 
+    char deviceStateTopicTemplate[100]; 
     char content[50];
     void setup() { 
         last_report_millis = millis();
