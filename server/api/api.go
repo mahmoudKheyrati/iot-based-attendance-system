@@ -34,7 +34,7 @@ func NewAttendanceSystem(attendanceSystemConfig AttendanceSystemConfig) *Attenda
 }
 
 func (a *AttendanceSystem) LedColor(request *attendance_system.LedColorRequest, server attendance_system.AttendanceSystem_LedColorServer) error {
-	ticker := time.NewTicker(5 * time.Second)
+	ticker := time.NewTicker(500 * time.Millisecond)
 	var lastRed int32
 	var lastGreen int32
 	var lastBlue int32
