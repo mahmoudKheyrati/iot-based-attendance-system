@@ -1,5 +1,14 @@
 version: '3'
 
+volumes:
+  vol1-emqx-data:
+  vol1-emqx-etc:
+  vol1-emqx-log:
+  
+  vol2-emqx-data:
+  vol2-emqx-etc:
+  vol2-emqx-log:
+
 services:
   emqx1:
     image: emqx:5.0.26
@@ -19,6 +28,10 @@ services:
       - 8084:8084
       - 8883:8883
       - 18083:18083 
+    volumes:
+      - vol1-emqx-data:/opt/emqx/data
+      - vol1-emqx-etc:/opt/emqx/etc
+      - vol1-emqx-log:/opt/emqx/log
   emqx2:
     image: emqx:5.0.26
     container_name: emqx2
@@ -31,3 +44,7 @@ services:
       interval: 5s
       timeout: 25s
       retries: 5
+    volumes:
+      - vol2-emqx-data:/opt/emqx/data
+      - vol2-emqx-etc:/opt/emqx/etc
+      - vol2-emqx-log:/opt/emqx/log
