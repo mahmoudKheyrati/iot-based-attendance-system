@@ -53,7 +53,7 @@ create table if not exists attendance_system.employee
 );
 insert into attendance_system.employee(card_uid, email, first_name, last_name, phone_number, rules) VALUES ('291F9630','mahmoud.kheyrati.fard@gmail.com', 'mahmoud reza', 'kheyrati fard', '+989384892109',{'42564aa8-2119-4ad9-b430-5ad89d90bf75'});
 insert into attendance_system.employee(card_uid, email, first_name, last_name, phone_number, rules) VALUES ('F9BFFB30','yasinrezaie@gmail.com', 'yasin', 'rezaie', '+9898888888',{'42564aa8-2119-4ad9-b430-5ad89d90bf75'});
-insert into attendance_system.employee(card_uid, email, first_name, last_name, phone_number, rules) VALUES ('F9BFFB30','arlotfi79@gmail.com', 'alireza', 'lotfi', '+9890000000',{});
+insert into attendance_system.employee(card_uid, email, first_name, last_name, phone_number, rules) VALUES ('39AE9530','arlotfi79@gmail.com', 'alireza', 'lotfi', '+9890000000',{});
 
 create table if not exists attendance_system.attendance_log
 (
