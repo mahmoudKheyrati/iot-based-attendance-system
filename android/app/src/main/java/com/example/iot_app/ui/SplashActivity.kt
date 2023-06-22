@@ -24,9 +24,13 @@ class SplashActivity : AppCompatActivity() {
 
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
         val fadein_anim = AnimationUtils.loadAnimation(this, R.anim.fade_in)
+        val rotate_anim = AnimationUtils.loadAnimation(this, R.anim.rotate)
 
         binding.apply {
             logoText.startAnimation(fadein_anim)
+            dbImage.startAnimation(rotate_anim)
+            appImage.startAnimation(rotate_anim)
+            hardwareImage.startAnimation(rotate_anim)
         }
 
         CoroutineScope(Dispatchers.IO).launch {

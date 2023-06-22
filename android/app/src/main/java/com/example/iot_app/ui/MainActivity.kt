@@ -244,7 +244,7 @@ class MainActivity : AppCompatActivity() {
             var r = if(RED_BUTTON_CLICKED) 255 else 0
             var g = if(GREEN_BUTTON_CLICKED) 255 else 0
             var b = if(BLUE_BUTTON_CLICKED) 255 else 0
-            finalLightColor.setBackgroundColor(Color.argb(255,r,g,b) )
+            btnSetLightColor.setBackgroundColor(Color.argb(255,r,g,b) )
         }
     }
 
