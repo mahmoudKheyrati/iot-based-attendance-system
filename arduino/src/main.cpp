@@ -39,6 +39,7 @@ void setup() {
     LED::on(LED::GREEN); 
 } 
 
+char message[50]; 
 void loop(){
   SCHEDULER::loop(); 
   MQTT::loop(); 
@@ -50,7 +51,6 @@ void loop(){
     Serial.println(uid); 
 
 
-    char message[50]; 
     sprintf(message, "%s,%s", String(time(NULL)).c_str(), uid ); 
     MQTT::publish(requestTopicTemplate, message); 
 

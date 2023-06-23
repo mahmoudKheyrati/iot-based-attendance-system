@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+	"github.com/gocql/gocql"
 	"log"
 	"server/config"
 	"server/pkg/db"
@@ -172,7 +173,52 @@ func (a *AttendanceSystem) GetAllDeviceIds(ctx context.Context, request *attenda
 	return &response, nil
 }
 
-func (a *AttendanceSystem) GetAllPresentPersons(ctx context.Context, request *attendance_system.GetPresentEmployeeRequest) (*attendance_system.GetPresentEmployeeResponse, error) {
-	//TODO spark
-	panic("implement me")
+func (a *AttendanceSystem) EmployeesPresenceStatus(request *attendance_system.EmployeePresenceStatusRequest, server attendance_system.AttendanceSystem_EmployeesPresenceStatusServer) error {
+
+	ticker := time.NewTicker(2 * time.Second)
+
+	var presenceMap = map[string]bool{}
+
+outerLoop:
+	for {
+		select {
+		case <-ticker.C:
+			employeeLockOpenedCounts, err := a.LockOpenedLogRepo.GetLockOpenedCountByDeviceId(request.DeviceId)
+			if err != nil {
+				log.Println(err)
+				return errors.New("internal server error")
+			}
+
+			for _, ec := range employeeLockOpenedCounts {
+				employee, err := a.EmployeeRepo.GetByCardUID(ec.CardUid)
+				if err != nil {
+					if err != gocql.ErrNotFound {
+						log.Println(err)
+						return errors.New("internal server error")
+					}
+					continue
+				}
+				v, ok := presenceMap[employee.CardUID]
+				isPresent := ec.Count%2 == 0
+				presenceMap[employee.CardUID] = isPresent
+
+				if !ok || v != isPresent {
+					fmt.Println("*******************", employee, v, isPresent)
+					err := server.Send(&attendance_system.EmployeePresenceStatusResponse{
+						FirstName: employee.FirstName,
+						LastName:  employee.LastName,
+						IsPresent: isPresent,
+					})
+					if err != nil {
+						log.Println(err)
+						continue outerLoop
+					}
+				}
+			}
+		case <-server.Context().Done():
+			break outerLoop
+		}
+
+	}
+	return nil
 }

@@ -27,7 +27,7 @@ type AttendanceSystemClient interface {
 	ChangeLedColor(ctx context.Context, in *ChangeLedColorRequest, opts ...grpc.CallOption) (*ChangeLedColorResponse, error)
 	OpenDoor(ctx context.Context, in *OpenDoorRequest, opts ...grpc.CallOption) (*OpenDoorResponse, error)
 	GetAllDeviceIds(ctx context.Context, in *GetDeviceIdsRequest, opts ...grpc.CallOption) (*GetDeviceIdsResponse, error)
-	GetAllPresentPersons(ctx context.Context, in *GetPresentEmployeeRequest, opts ...grpc.CallOption) (*GetPresentEmployeeResponse, error)
+	EmployeesPresenceStatus(ctx context.Context, in *EmployeePresenceStatusRequest, opts ...grpc.CallOption) (AttendanceSystem_EmployeesPresenceStatusClient, error)
 }
 
 type attendanceSystemClient struct {
@@ -129,13 +129,36 @@ func (c *attendanceSystemClient) GetAllDeviceIds(ctx context.Context, in *GetDev
 	return out, nil
 }
 
-func (c *attendanceSystemClient) GetAllPresentPersons(ctx context.Context, in *GetPresentEmployeeRequest, opts ...grpc.CallOption) (*GetPresentEmployeeResponse, error) {
-	out := new(GetPresentEmployeeResponse)
-	err := c.cc.Invoke(ctx, "/ir.mahmoud.iot_attendance_system.attendanceSystem/getAllPresentPersons", in, out, opts...)
+func (c *attendanceSystemClient) EmployeesPresenceStatus(ctx context.Context, in *EmployeePresenceStatusRequest, opts ...grpc.CallOption) (AttendanceSystem_EmployeesPresenceStatusClient, error) {
+	stream, err := c.cc.NewStream(ctx, &AttendanceSystem_ServiceDesc.Streams[2], "/ir.mahmoud.iot_attendance_system.attendanceSystem/employeesPresenceStatus", opts...)
 	if err != nil {
 		return nil, err
 	}
-	return out, nil
+	x := &attendanceSystemEmployeesPresenceStatusClient{stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+type AttendanceSystem_EmployeesPresenceStatusClient interface {
+	Recv() (*EmployeePresenceStatusResponse, error)
+	grpc.ClientStream
+}
+
+type attendanceSystemEmployeesPresenceStatusClient struct {
+	grpc.ClientStream
+}
+
+func (x *attendanceSystemEmployeesPresenceStatusClient) Recv() (*EmployeePresenceStatusResponse, error) {
+	m := new(EmployeePresenceStatusResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
 }
 
 // AttendanceSystemServer is the server API for AttendanceSystem service.
@@ -147,7 +170,7 @@ type AttendanceSystemServer interface {
 	ChangeLedColor(context.Context, *ChangeLedColorRequest) (*ChangeLedColorResponse, error)
 	OpenDoor(context.Context, *OpenDoorRequest) (*OpenDoorResponse, error)
 	GetAllDeviceIds(context.Context, *GetDeviceIdsRequest) (*GetDeviceIdsResponse, error)
-	GetAllPresentPersons(context.Context, *GetPresentEmployeeRequest) (*GetPresentEmployeeResponse, error)
+	EmployeesPresenceStatus(*EmployeePresenceStatusRequest, AttendanceSystem_EmployeesPresenceStatusServer) error
 }
 
 // UnimplementedAttendanceSystemServer should be embedded to have forward compatible implementations.
@@ -169,8 +192,8 @@ func (UnimplementedAttendanceSystemServer) OpenDoor(context.Context, *OpenDoorRe
 func (UnimplementedAttendanceSystemServer) GetAllDeviceIds(context.Context, *GetDeviceIdsRequest) (*GetDeviceIdsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllDeviceIds not implemented")
 }
-func (UnimplementedAttendanceSystemServer) GetAllPresentPersons(context.Context, *GetPresentEmployeeRequest) (*GetPresentEmployeeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAllPresentPersons not implemented")
+func (UnimplementedAttendanceSystemServer) EmployeesPresenceStatus(*EmployeePresenceStatusRequest, AttendanceSystem_EmployeesPresenceStatusServer) error {
+	return status.Errorf(codes.Unimplemented, "method EmployeesPresenceStatus not implemented")
 }
 
 // UnsafeAttendanceSystemServer may be embedded to opt out of forward compatibility for this service.
@@ -280,22 +303,25 @@ func _AttendanceSystem_GetAllDeviceIds_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AttendanceSystem_GetAllPresentPersons_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetPresentEmployeeRequest)
-	if err := dec(in); err != nil {
-		return nil, err
+func _AttendanceSystem_EmployeesPresenceStatus_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(EmployeePresenceStatusRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
 	}
-	if interceptor == nil {
-		return srv.(AttendanceSystemServer).GetAllPresentPersons(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/ir.mahmoud.iot_attendance_system.attendanceSystem/getAllPresentPersons",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AttendanceSystemServer).GetAllPresentPersons(ctx, req.(*GetPresentEmployeeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
+	return srv.(AttendanceSystemServer).EmployeesPresenceStatus(m, &attendanceSystemEmployeesPresenceStatusServer{stream})
+}
+
+type AttendanceSystem_EmployeesPresenceStatusServer interface {
+	Send(*EmployeePresenceStatusResponse) error
+	grpc.ServerStream
+}
+
+type attendanceSystemEmployeesPresenceStatusServer struct {
+	grpc.ServerStream
+}
+
+func (x *attendanceSystemEmployeesPresenceStatusServer) Send(m *EmployeePresenceStatusResponse) error {
+	return x.ServerStream.SendMsg(m)
 }
 
 // AttendanceSystem_ServiceDesc is the grpc.ServiceDesc for AttendanceSystem service.
@@ -317,10 +343,6 @@ var AttendanceSystem_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "getAllDeviceIds",
 			Handler:    _AttendanceSystem_GetAllDeviceIds_Handler,
 		},
-		{
-			MethodName: "getAllPresentPersons",
-			Handler:    _AttendanceSystem_GetAllPresentPersons_Handler,
-		},
 	},
 	Streams: []grpc.StreamDesc{
 		{
@@ -331,6 +353,11 @@ var AttendanceSystem_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "lockOpenedHistory",
 			Handler:       _AttendanceSystem_LockOpenedHistory_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "employeesPresenceStatus",
+			Handler:       _AttendanceSystem_EmployeesPresenceStatus_Handler,
 			ServerStreams: true,
 		},
 	},
