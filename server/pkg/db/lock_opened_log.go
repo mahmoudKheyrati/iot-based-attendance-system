@@ -31,7 +31,7 @@ func (l *LockOpenedLogRepo) Insert(lockOpenedLog LockOpenedLog) error {
 
 func (l *LockOpenedLogRepo) GetByDeviceID(deviceID string) ([]LockOpenedLog, error) {
 	// Construct the SELECT query
-	query := "SELECT device_id, card_uid, server_timestamp, time_after_startup_sec FROM attendance_system.lock_opened_log WHERE device_id = ? ORDER BY server_timestamp ASC, time_after_startup_sec ASC"
+	query := "SELECT device_id, card_uid, server_timestamp, time_after_startup_sec FROM attendance_system.lock_opened_log WHERE device_id = ? ORDER BY card_uid asc, server_timestamp ASC, time_after_startup_sec ASC"
 
 	// Execute the query with the given device ID
 	var lockOpenedLogs []LockOpenedLog

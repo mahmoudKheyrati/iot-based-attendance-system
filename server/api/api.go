@@ -84,7 +84,7 @@ func (a *AttendanceSystem) LedColor(request *attendance_system.LedColorRequest, 
 }
 
 func (a *AttendanceSystem) LockOpenedHistory(request *attendance_system.LockOpenedHistoryRequest, server attendance_system.AttendanceSystem_LockOpenedHistoryServer) error {
-	ticker := time.NewTicker(5 * time.Second)
+	ticker := time.NewTicker(1 * time.Second)
 	lastCount := 0
 	for {
 		select {
@@ -93,6 +93,7 @@ func (a *AttendanceSystem) LockOpenedHistory(request *attendance_system.LockOpen
 		case <-ticker.C:
 			logs, err := a.LockOpenedLogRepo.GetByDeviceID(request.DeviceId)
 			if err != nil {
+				log.Println(err)
 				return errors.New("internal server error")
 			}
 			if len(logs) != lastCount {
@@ -203,7 +204,6 @@ outerLoop:
 				presenceMap[employee.CardUID] = isPresent
 
 				if !ok || v != isPresent {
-					fmt.Println("*******************", employee, v, isPresent)
 					err := server.Send(&attendance_system.EmployeePresenceStatusResponse{
 						FirstName: employee.FirstName,
 						LastName:  employee.LastName,
