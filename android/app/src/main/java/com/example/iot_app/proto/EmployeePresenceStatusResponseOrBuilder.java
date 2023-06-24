@@ -3,8 +3,8 @@
 
 package com.example.iot_app.proto;
 
-public interface EmployeeOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:ir.mahmoud.iot_attendance_system.Employee)
+public interface EmployeePresenceStatusResponseOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:ir.mahmoud.iot_attendance_system.EmployeePresenceStatusResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**
@@ -30,4 +30,10 @@ public interface EmployeeOrBuilder extends
    */
   com.google.protobuf.ByteString
       getLastNameBytes();
+
+  /**
+   * <code>bool is_present = 3;</code>
+   * @return The isPresent.
+   */
+  boolean getIsPresent();
 }

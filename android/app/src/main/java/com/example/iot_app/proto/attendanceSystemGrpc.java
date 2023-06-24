@@ -170,35 +170,35 @@ public final class attendanceSystemGrpc {
     return getGetAllDeviceIdsMethod;
   }
 
-  private static volatile io.grpc.MethodDescriptor<GetPresentEmployeeRequest,
-      GetPresentEmployeeResponse> getGetAllPresentPersonsMethod;
+  private static volatile io.grpc.MethodDescriptor<EmployeePresenceStatusRequest,
+      EmployeePresenceStatusResponse> getEmployeesPresenceStatusMethod;
 
   @io.grpc.stub.annotations.RpcMethod(
-      fullMethodName = SERVICE_NAME + '/' + "getAllPresentPersons",
-      requestType = GetPresentEmployeeRequest.class,
-      responseType = GetPresentEmployeeResponse.class,
-      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
-  public static io.grpc.MethodDescriptor<GetPresentEmployeeRequest,
-      GetPresentEmployeeResponse> getGetAllPresentPersonsMethod() {
-    io.grpc.MethodDescriptor<GetPresentEmployeeRequest, GetPresentEmployeeResponse> getGetAllPresentPersonsMethod;
-    if ((getGetAllPresentPersonsMethod = attendanceSystemGrpc.getGetAllPresentPersonsMethod) == null) {
+      fullMethodName = SERVICE_NAME + '/' + "employeesPresenceStatus",
+      requestType = EmployeePresenceStatusRequest.class,
+      responseType = EmployeePresenceStatusResponse.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+  public static io.grpc.MethodDescriptor<EmployeePresenceStatusRequest,
+      EmployeePresenceStatusResponse> getEmployeesPresenceStatusMethod() {
+    io.grpc.MethodDescriptor<EmployeePresenceStatusRequest, EmployeePresenceStatusResponse> getEmployeesPresenceStatusMethod;
+    if ((getEmployeesPresenceStatusMethod = attendanceSystemGrpc.getEmployeesPresenceStatusMethod) == null) {
       synchronized (attendanceSystemGrpc.class) {
-        if ((getGetAllPresentPersonsMethod = attendanceSystemGrpc.getGetAllPresentPersonsMethod) == null) {
-          attendanceSystemGrpc.getGetAllPresentPersonsMethod = getGetAllPresentPersonsMethod =
-              io.grpc.MethodDescriptor.<GetPresentEmployeeRequest, GetPresentEmployeeResponse>newBuilder()
-              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
-              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "getAllPresentPersons"))
+        if ((getEmployeesPresenceStatusMethod = attendanceSystemGrpc.getEmployeesPresenceStatusMethod) == null) {
+          attendanceSystemGrpc.getEmployeesPresenceStatusMethod = getEmployeesPresenceStatusMethod =
+              io.grpc.MethodDescriptor.<EmployeePresenceStatusRequest, EmployeePresenceStatusResponse>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.SERVER_STREAMING)
+              .setFullMethodName(generateFullMethodName(SERVICE_NAME, "employeesPresenceStatus"))
               .setSampledToLocalTracing(true)
               .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  GetPresentEmployeeRequest.getDefaultInstance()))
+                  EmployeePresenceStatusRequest.getDefaultInstance()))
               .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-                  GetPresentEmployeeResponse.getDefaultInstance()))
-              .setSchemaDescriptor(new attendanceSystemMethodDescriptorSupplier("getAllPresentPersons"))
+                  EmployeePresenceStatusResponse.getDefaultInstance()))
+              .setSchemaDescriptor(new attendanceSystemMethodDescriptorSupplier("employeesPresenceStatus"))
               .build();
         }
       }
     }
-    return getGetAllPresentPersonsMethod;
+    return getEmployeesPresenceStatusMethod;
   }
 
   /**
@@ -286,9 +286,9 @@ public final class attendanceSystemGrpc {
 
     /**
      */
-    public void getAllPresentPersons(GetPresentEmployeeRequest request,
-                                     io.grpc.stub.StreamObserver<GetPresentEmployeeResponse> responseObserver) {
-      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getGetAllPresentPersonsMethod(), responseObserver);
+    public void employeesPresenceStatus(EmployeePresenceStatusRequest request,
+                                        io.grpc.stub.StreamObserver<EmployeePresenceStatusResponse> responseObserver) {
+      io.grpc.stub.ServerCalls.asyncUnimplementedUnaryCall(getEmployeesPresenceStatusMethod(), responseObserver);
     }
 
     @Override public final io.grpc.ServerServiceDefinition bindService() {
@@ -329,12 +329,12 @@ public final class attendanceSystemGrpc {
                 GetDeviceIdsResponse>(
                   this, METHODID_GET_ALL_DEVICE_IDS)))
           .addMethod(
-            getGetAllPresentPersonsMethod(),
-            io.grpc.stub.ServerCalls.asyncUnaryCall(
+            getEmployeesPresenceStatusMethod(),
+            io.grpc.stub.ServerCalls.asyncServerStreamingCall(
               new MethodHandlers<
-                GetPresentEmployeeRequest,
-                GetPresentEmployeeResponse>(
-                  this, METHODID_GET_ALL_PRESENT_PERSONS)))
+                EmployeePresenceStatusRequest,
+                EmployeePresenceStatusResponse>(
+                  this, METHODID_EMPLOYEES_PRESENCE_STATUS)))
           .build();
     }
   }
@@ -395,10 +395,10 @@ public final class attendanceSystemGrpc {
 
     /**
      */
-    public void getAllPresentPersons(GetPresentEmployeeRequest request,
-                                     io.grpc.stub.StreamObserver<GetPresentEmployeeResponse> responseObserver) {
-      io.grpc.stub.ClientCalls.asyncUnaryCall(
-          getChannel().newCall(getGetAllPresentPersonsMethod(), getCallOptions()), request, responseObserver);
+    public void employeesPresenceStatus(EmployeePresenceStatusRequest request,
+                                        io.grpc.stub.StreamObserver<EmployeePresenceStatusResponse> responseObserver) {
+      io.grpc.stub.ClientCalls.asyncServerStreamingCall(
+          getChannel().newCall(getEmployeesPresenceStatusMethod(), getCallOptions()), request, responseObserver);
     }
   }
 
@@ -455,9 +455,10 @@ public final class attendanceSystemGrpc {
 
     /**
      */
-    public GetPresentEmployeeResponse getAllPresentPersons(GetPresentEmployeeRequest request) {
-      return io.grpc.stub.ClientCalls.blockingUnaryCall(
-          getChannel(), getGetAllPresentPersonsMethod(), getCallOptions(), request);
+    public java.util.Iterator<EmployeePresenceStatusResponse> employeesPresenceStatus(
+        EmployeePresenceStatusRequest request) {
+      return io.grpc.stub.ClientCalls.blockingServerStreamingCall(
+          getChannel(), getEmployeesPresenceStatusMethod(), getCallOptions(), request);
     }
   }
 
@@ -498,14 +499,6 @@ public final class attendanceSystemGrpc {
       return io.grpc.stub.ClientCalls.futureUnaryCall(
           getChannel().newCall(getGetAllDeviceIdsMethod(), getCallOptions()), request);
     }
-
-    /**
-     */
-    public com.google.common.util.concurrent.ListenableFuture<GetPresentEmployeeResponse> getAllPresentPersons(
-        GetPresentEmployeeRequest request) {
-      return io.grpc.stub.ClientCalls.futureUnaryCall(
-          getChannel().newCall(getGetAllPresentPersonsMethod(), getCallOptions()), request);
-    }
   }
 
   private static final int METHODID_LED_COLOR = 0;
@@ -513,7 +506,7 @@ public final class attendanceSystemGrpc {
   private static final int METHODID_CHANGE_LED_COLOR = 2;
   private static final int METHODID_OPEN_DOOR = 3;
   private static final int METHODID_GET_ALL_DEVICE_IDS = 4;
-  private static final int METHODID_GET_ALL_PRESENT_PERSONS = 5;
+  private static final int METHODID_EMPLOYEES_PRESENCE_STATUS = 5;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -552,9 +545,9 @@ public final class attendanceSystemGrpc {
           serviceImpl.getAllDeviceIds((GetDeviceIdsRequest) request,
               (io.grpc.stub.StreamObserver<GetDeviceIdsResponse>) responseObserver);
           break;
-        case METHODID_GET_ALL_PRESENT_PERSONS:
-          serviceImpl.getAllPresentPersons((GetPresentEmployeeRequest) request,
-              (io.grpc.stub.StreamObserver<GetPresentEmployeeResponse>) responseObserver);
+        case METHODID_EMPLOYEES_PRESENCE_STATUS:
+          serviceImpl.employeesPresenceStatus((EmployeePresenceStatusRequest) request,
+              (io.grpc.stub.StreamObserver<EmployeePresenceStatusResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -622,7 +615,7 @@ public final class attendanceSystemGrpc {
               .addMethod(getChangeLedColorMethod())
               .addMethod(getOpenDoorMethod())
               .addMethod(getGetAllDeviceIdsMethod())
-              .addMethod(getGetAllPresentPersonsMethod())
+              .addMethod(getEmployeesPresenceStatusMethod())
               .build();
         }
       }

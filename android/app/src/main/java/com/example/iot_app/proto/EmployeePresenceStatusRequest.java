@@ -4,25 +4,26 @@
 package com.example.iot_app.proto;
 
 /**
- * Protobuf type {@code ir.mahmoud.iot_attendance_system.GetPresentEmployeeRequest}
+ * Protobuf type {@code ir.mahmoud.iot_attendance_system.EmployeePresenceStatusRequest}
  */
-public final class GetPresentEmployeeRequest extends
+public final class EmployeePresenceStatusRequest extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:ir.mahmoud.iot_attendance_system.GetPresentEmployeeRequest)
-    GetPresentEmployeeRequestOrBuilder {
+    // @@protoc_insertion_point(message_implements:ir.mahmoud.iot_attendance_system.EmployeePresenceStatusRequest)
+    EmployeePresenceStatusRequestOrBuilder {
 private static final long serialVersionUID = 0L;
-  // Use GetPresentEmployeeRequest.newBuilder() to construct.
-  private GetPresentEmployeeRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+  // Use EmployeePresenceStatusRequest.newBuilder() to construct.
+  private EmployeePresenceStatusRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private GetPresentEmployeeRequest() {
+  private EmployeePresenceStatusRequest() {
+    deviceId_ = "";
   }
 
   @Override
   @SuppressWarnings({"unused"})
   protected Object newInstance(
       UnusedPrivateParameter unused) {
-    return new GetPresentEmployeeRequest();
+    return new EmployeePresenceStatusRequest();
   }
 
   @Override
@@ -30,7 +31,7 @@ private static final long serialVersionUID = 0L;
   getUnknownFields() {
     return this.unknownFields;
   }
-  private GetPresentEmployeeRequest(
+  private EmployeePresenceStatusRequest(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -48,6 +49,12 @@ private static final long serialVersionUID = 0L;
           case 0:
             done = true;
             break;
+          case 10: {
+            String s = input.readStringRequireUtf8();
+
+            deviceId_ = s;
+            break;
+          }
           default: {
             if (!parseUnknownField(
                 input, unknownFields, extensionRegistry, tag)) {
@@ -71,15 +78,53 @@ private static final long serialVersionUID = 0L;
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return MyServiceProto.internal_static_ir_mahmoud_iot_attendance_system_GetPresentEmployeeRequest_descriptor;
+    return MyServiceProto.internal_static_ir_mahmoud_iot_attendance_system_EmployeePresenceStatusRequest_descriptor;
   }
 
   @Override
-  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  protected FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return MyServiceProto.internal_static_ir_mahmoud_iot_attendance_system_GetPresentEmployeeRequest_fieldAccessorTable
+    return MyServiceProto.internal_static_ir_mahmoud_iot_attendance_system_EmployeePresenceStatusRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            GetPresentEmployeeRequest.class, Builder.class);
+            EmployeePresenceStatusRequest.class, Builder.class);
+  }
+
+  public static final int DEVICE_ID_FIELD_NUMBER = 1;
+  private volatile Object deviceId_;
+  /**
+   * <code>string device_id = 1;</code>
+   * @return The deviceId.
+   */
+  @Override
+  public String getDeviceId() {
+    Object ref = deviceId_;
+    if (ref instanceof String) {
+      return (String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      String s = bs.toStringUtf8();
+      deviceId_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>string device_id = 1;</code>
+   * @return The bytes for deviceId.
+   */
+  @Override
+  public com.google.protobuf.ByteString
+      getDeviceIdBytes() {
+    Object ref = deviceId_;
+    if (ref instanceof String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (String) ref);
+      deviceId_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   private byte memoizedIsInitialized = -1;
@@ -96,6 +141,9 @@ private static final long serialVersionUID = 0L;
   @Override
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(deviceId_)) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, deviceId_);
+    }
     unknownFields.writeTo(output);
   }
 
@@ -105,6 +153,9 @@ private static final long serialVersionUID = 0L;
     if (size != -1) return size;
 
     size = 0;
+    if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(deviceId_)) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, deviceId_);
+    }
     size += unknownFields.getSerializedSize();
     memoizedSize = size;
     return size;
@@ -115,11 +166,13 @@ private static final long serialVersionUID = 0L;
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof GetPresentEmployeeRequest)) {
+    if (!(obj instanceof EmployeePresenceStatusRequest)) {
       return super.equals(obj);
     }
-    GetPresentEmployeeRequest other = (GetPresentEmployeeRequest) obj;
+    EmployeePresenceStatusRequest other = (EmployeePresenceStatusRequest) obj;
 
+    if (!getDeviceId()
+        .equals(other.getDeviceId())) return false;
     if (!unknownFields.equals(other.unknownFields)) return false;
     return true;
   }
@@ -131,74 +184,76 @@ private static final long serialVersionUID = 0L;
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptor().hashCode();
+    hash = (37 * hash) + DEVICE_ID_FIELD_NUMBER;
+    hash = (53 * hash) + getDeviceId().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static GetPresentEmployeeRequest parseFrom(
+  public static EmployeePresenceStatusRequest parseFrom(
       java.nio.ByteBuffer data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static GetPresentEmployeeRequest parseFrom(
+  public static EmployeePresenceStatusRequest parseFrom(
       java.nio.ByteBuffer data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static GetPresentEmployeeRequest parseFrom(
+  public static EmployeePresenceStatusRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static GetPresentEmployeeRequest parseFrom(
+  public static EmployeePresenceStatusRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static GetPresentEmployeeRequest parseFrom(byte[] data)
+  public static EmployeePresenceStatusRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static GetPresentEmployeeRequest parseFrom(
+  public static EmployeePresenceStatusRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static GetPresentEmployeeRequest parseFrom(java.io.InputStream input)
+  public static EmployeePresenceStatusRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static GetPresentEmployeeRequest parseFrom(
+  public static EmployeePresenceStatusRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static GetPresentEmployeeRequest parseDelimitedFrom(java.io.InputStream input)
+  public static EmployeePresenceStatusRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static GetPresentEmployeeRequest parseDelimitedFrom(
+  public static EmployeePresenceStatusRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static GetPresentEmployeeRequest parseFrom(
+  public static EmployeePresenceStatusRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static GetPresentEmployeeRequest parseFrom(
+  public static EmployeePresenceStatusRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -211,7 +266,7 @@ private static final long serialVersionUID = 0L;
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(GetPresentEmployeeRequest prototype) {
+  public static Builder newBuilder(EmployeePresenceStatusRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   @Override
@@ -222,37 +277,37 @@ private static final long serialVersionUID = 0L;
 
   @Override
   protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
   /**
-   * Protobuf type {@code ir.mahmoud.iot_attendance_system.GetPresentEmployeeRequest}
+   * Protobuf type {@code ir.mahmoud.iot_attendance_system.EmployeePresenceStatusRequest}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:ir.mahmoud.iot_attendance_system.GetPresentEmployeeRequest)
-      GetPresentEmployeeRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:ir.mahmoud.iot_attendance_system.EmployeePresenceStatusRequest)
+      EmployeePresenceStatusRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return MyServiceProto.internal_static_ir_mahmoud_iot_attendance_system_GetPresentEmployeeRequest_descriptor;
+      return MyServiceProto.internal_static_ir_mahmoud_iot_attendance_system_EmployeePresenceStatusRequest_descriptor;
     }
 
     @Override
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return MyServiceProto.internal_static_ir_mahmoud_iot_attendance_system_GetPresentEmployeeRequest_fieldAccessorTable
+      return MyServiceProto.internal_static_ir_mahmoud_iot_attendance_system_EmployeePresenceStatusRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              GetPresentEmployeeRequest.class, Builder.class);
+              EmployeePresenceStatusRequest.class, Builder.class);
     }
 
-    // Construct using com.example.iot_app.proto.GetPresentEmployeeRequest.newBuilder()
+    // Construct using com.example.iot_app.proto.EmployeePresenceStatusRequest.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
 
     private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
@@ -264,23 +319,25 @@ private static final long serialVersionUID = 0L;
     @Override
     public Builder clear() {
       super.clear();
+      deviceId_ = "";
+
       return this;
     }
 
     @Override
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return MyServiceProto.internal_static_ir_mahmoud_iot_attendance_system_GetPresentEmployeeRequest_descriptor;
+      return MyServiceProto.internal_static_ir_mahmoud_iot_attendance_system_EmployeePresenceStatusRequest_descriptor;
     }
 
     @Override
-    public GetPresentEmployeeRequest getDefaultInstanceForType() {
-      return GetPresentEmployeeRequest.getDefaultInstance();
+    public EmployeePresenceStatusRequest getDefaultInstanceForType() {
+      return EmployeePresenceStatusRequest.getDefaultInstance();
     }
 
     @Override
-    public GetPresentEmployeeRequest build() {
-      GetPresentEmployeeRequest result = buildPartial();
+    public EmployeePresenceStatusRequest build() {
+      EmployeePresenceStatusRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
@@ -288,8 +345,9 @@ private static final long serialVersionUID = 0L;
     }
 
     @Override
-    public GetPresentEmployeeRequest buildPartial() {
-      GetPresentEmployeeRequest result = new GetPresentEmployeeRequest(this);
+    public EmployeePresenceStatusRequest buildPartial() {
+      EmployeePresenceStatusRequest result = new EmployeePresenceStatusRequest(this);
+      result.deviceId_ = deviceId_;
       onBuilt();
       return result;
     }
@@ -328,16 +386,20 @@ private static final long serialVersionUID = 0L;
     }
     @Override
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof GetPresentEmployeeRequest) {
-        return mergeFrom((GetPresentEmployeeRequest)other);
+      if (other instanceof EmployeePresenceStatusRequest) {
+        return mergeFrom((EmployeePresenceStatusRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(GetPresentEmployeeRequest other) {
-      if (other == GetPresentEmployeeRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(EmployeePresenceStatusRequest other) {
+      if (other == EmployeePresenceStatusRequest.getDefaultInstance()) return this;
+      if (!other.getDeviceId().isEmpty()) {
+        deviceId_ = other.deviceId_;
+        onChanged();
+      }
       this.mergeUnknownFields(other.unknownFields);
       onChanged();
       return this;
@@ -353,17 +415,93 @@ private static final long serialVersionUID = 0L;
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      GetPresentEmployeeRequest parsedMessage = null;
+      EmployeePresenceStatusRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (GetPresentEmployeeRequest) e.getUnfinishedMessage();
+        parsedMessage = (EmployeePresenceStatusRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
           mergeFrom(parsedMessage);
         }
       }
+      return this;
+    }
+
+    private Object deviceId_ = "";
+    /**
+     * <code>string device_id = 1;</code>
+     * @return The deviceId.
+     */
+    public String getDeviceId() {
+      Object ref = deviceId_;
+      if (!(ref instanceof String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        deviceId_ = s;
+        return s;
+      } else {
+        return (String) ref;
+      }
+    }
+    /**
+     * <code>string device_id = 1;</code>
+     * @return The bytes for deviceId.
+     */
+    public com.google.protobuf.ByteString
+        getDeviceIdBytes() {
+      Object ref = deviceId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        deviceId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>string device_id = 1;</code>
+     * @param value The deviceId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setDeviceId(
+        String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      deviceId_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string device_id = 1;</code>
+     * @return This builder for chaining.
+     */
+    public Builder clearDeviceId() {
+      
+      deviceId_ = getDefaultInstance().getDeviceId();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>string device_id = 1;</code>
+     * @param value The bytes for deviceId to set.
+     * @return This builder for chaining.
+     */
+    public Builder setDeviceIdBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      deviceId_ = value;
+      onChanged();
       return this;
     }
     @Override
@@ -379,41 +517,41 @@ private static final long serialVersionUID = 0L;
     }
 
 
-    // @@protoc_insertion_point(builder_scope:ir.mahmoud.iot_attendance_system.GetPresentEmployeeRequest)
+    // @@protoc_insertion_point(builder_scope:ir.mahmoud.iot_attendance_system.EmployeePresenceStatusRequest)
   }
 
-  // @@protoc_insertion_point(class_scope:ir.mahmoud.iot_attendance_system.GetPresentEmployeeRequest)
-  private static final GetPresentEmployeeRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:ir.mahmoud.iot_attendance_system.EmployeePresenceStatusRequest)
+  private static final EmployeePresenceStatusRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new GetPresentEmployeeRequest();
+    DEFAULT_INSTANCE = new EmployeePresenceStatusRequest();
   }
 
-  public static GetPresentEmployeeRequest getDefaultInstance() {
+  public static EmployeePresenceStatusRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<GetPresentEmployeeRequest>
-      PARSER = new com.google.protobuf.AbstractParser<GetPresentEmployeeRequest>() {
+  private static final com.google.protobuf.Parser<EmployeePresenceStatusRequest>
+      PARSER = new com.google.protobuf.AbstractParser<EmployeePresenceStatusRequest>() {
     @Override
-    public GetPresentEmployeeRequest parsePartialFrom(
+    public EmployeePresenceStatusRequest parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-      return new GetPresentEmployeeRequest(input, extensionRegistry);
+      return new EmployeePresenceStatusRequest(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<GetPresentEmployeeRequest> parser() {
+  public static com.google.protobuf.Parser<EmployeePresenceStatusRequest> parser() {
     return PARSER;
   }
 
   @Override
-  public com.google.protobuf.Parser<GetPresentEmployeeRequest> getParserForType() {
+  public com.google.protobuf.Parser<EmployeePresenceStatusRequest> getParserForType() {
     return PARSER;
   }
 
   @Override
-  public GetPresentEmployeeRequest getDefaultInstanceForType() {
+  public EmployeePresenceStatusRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

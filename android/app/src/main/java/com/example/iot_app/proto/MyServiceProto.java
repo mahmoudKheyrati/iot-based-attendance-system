@@ -75,20 +75,15 @@ public final class MyServiceProto {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_ir_mahmoud_iot_attendance_system_GetDeviceIdsResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_ir_mahmoud_iot_attendance_system_Employee_descriptor;
+    internal_static_ir_mahmoud_iot_attendance_system_EmployeePresenceStatusRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_ir_mahmoud_iot_attendance_system_Employee_fieldAccessorTable;
+      internal_static_ir_mahmoud_iot_attendance_system_EmployeePresenceStatusRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_ir_mahmoud_iot_attendance_system_GetPresentEmployeeRequest_descriptor;
+    internal_static_ir_mahmoud_iot_attendance_system_EmployeePresenceStatusResponse_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_ir_mahmoud_iot_attendance_system_GetPresentEmployeeRequest_fieldAccessorTable;
-  static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_ir_mahmoud_iot_attendance_system_GetPresentEmployeeResponse_descriptor;
-  static final 
-    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_ir_mahmoud_iot_attendance_system_GetPresentEmployeeResponse_fieldAccessorTable;
+      internal_static_ir_mahmoud_iot_attendance_system_EmployeePresenceStatusResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -115,33 +110,33 @@ public final class MyServiceProto {
       "DeviceIdsRequest\022\021\n\tdevice_id\030\001 \001(\t\"\033\n\006D" +
       "evice\022\021\n\tdevice_id\030\001 \001(\t\"Q\n\024GetDeviceIds" +
       "Response\0229\n\007devices\030\001 \003(\0132(.ir.mahmoud.i" +
-      "ot_attendance_system.Device\"1\n\010Employee\022" +
-      "\022\n\nfirst_name\030\001 \001(\t\022\021\n\tlast_name\030\002 \001(\t\"\033" +
-      "\n\031GetPresentEmployeeRequest\"[\n\032GetPresen" +
-      "tEmployeeResponse\022=\n\temployees\030\001 \003(\0132*.i" +
-      "r.mahmoud.iot_attendance_system.Employee" +
-      "2\250\006\n\020attendanceSystem\022s\n\010ledColor\0221.ir.m" +
-      "ahmoud.iot_attendance_system.LedColorReq" +
-      "uest\0322.ir.mahmoud.iot_attendance_system." +
-      "LedColorResponse0\001\022\216\001\n\021lockOpenedHistory" +
-      "\022:.ir.mahmoud.iot_attendance_system.Lock" +
-      "OpenedHistoryRequest\032;.ir.mahmoud.iot_at" +
-      "tendance_system.LockOpenedHistoryRespons" +
-      "e0\001\022\203\001\n\016changeLedColor\0227.ir.mahmoud.iot_" +
-      "attendance_system.ChangeLedColorRequest\032" +
-      "8.ir.mahmoud.iot_attendance_system.Chang" +
-      "eLedColorResponse\022q\n\010openDoor\0221.ir.mahmo" +
-      "ud.iot_attendance_system.OpenDoorRequest" +
-      "\0322.ir.mahmoud.iot_attendance_system.Open" +
-      "DoorResponse\022\200\001\n\017getAllDeviceIds\0225.ir.ma" +
-      "hmoud.iot_attendance_system.GetDeviceIds" +
-      "Request\0326.ir.mahmoud.iot_attendance_syst" +
-      "em.GetDeviceIdsResponse\022\221\001\n\024getAllPresen" +
-      "tPersons\022;.ir.mahmoud.iot_attendance_sys" +
-      "tem.GetPresentEmployeeRequest\032<.ir.mahmo" +
-      "ud.iot_attendance_system.GetPresentEmplo" +
-      "yeeResponseB-\n\031com.example.iot_app.proto" +
-      "B\016MyServiceProtoP\001b\006proto3"
+      "ot_attendance_system.Device\"2\n\035EmployeeP" +
+      "resenceStatusRequest\022\021\n\tdevice_id\030\001 \001(\t\"" +
+      "[\n\036EmployeePresenceStatusResponse\022\022\n\nfir" +
+      "st_name\030\001 \001(\t\022\021\n\tlast_name\030\002 \001(\t\022\022\n\nis_p" +
+      "resent\030\003 \001(\0102\265\006\n\020attendanceSystem\022s\n\010led" +
+      "Color\0221.ir.mahmoud.iot_attendance_system" +
+      ".LedColorRequest\0322.ir.mahmoud.iot_attend" +
+      "ance_system.LedColorResponse0\001\022\216\001\n\021lockO" +
+      "penedHistory\022:.ir.mahmoud.iot_attendance" +
+      "_system.LockOpenedHistoryRequest\032;.ir.ma" +
+      "hmoud.iot_attendance_system.LockOpenedHi" +
+      "storyResponse0\001\022\203\001\n\016changeLedColor\0227.ir." +
+      "mahmoud.iot_attendance_system.ChangeLedC" +
+      "olorRequest\0328.ir.mahmoud.iot_attendance_" +
+      "system.ChangeLedColorResponse\022q\n\010openDoo" +
+      "r\0221.ir.mahmoud.iot_attendance_system.Ope" +
+      "nDoorRequest\0322.ir.mahmoud.iot_attendance" +
+      "_system.OpenDoorResponse\022\200\001\n\017getAllDevic" +
+      "eIds\0225.ir.mahmoud.iot_attendance_system." +
+      "GetDeviceIdsRequest\0326.ir.mahmoud.iot_att" +
+      "endance_system.GetDeviceIdsResponse\022\236\001\n\027" +
+      "employeesPresenceStatus\022?.ir.mahmoud.iot" +
+      "_attendance_system.EmployeePresenceStatu" +
+      "sRequest\032@.ir.mahmoud.iot_attendance_sys" +
+      "tem.EmployeePresenceStatusResponse0\001B-\n\031" +
+      "com.example.iot_app.protoB\016MyServiceProt" +
+      "oP\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -219,24 +214,18 @@ public final class MyServiceProto {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_ir_mahmoud_iot_attendance_system_GetDeviceIdsResponse_descriptor,
         new String[] { "Devices", });
-    internal_static_ir_mahmoud_iot_attendance_system_Employee_descriptor =
+    internal_static_ir_mahmoud_iot_attendance_system_EmployeePresenceStatusRequest_descriptor =
       getDescriptor().getMessageTypes().get(11);
-    internal_static_ir_mahmoud_iot_attendance_system_Employee_fieldAccessorTable = new
+    internal_static_ir_mahmoud_iot_attendance_system_EmployeePresenceStatusRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_ir_mahmoud_iot_attendance_system_Employee_descriptor,
-        new String[] { "FirstName", "LastName", });
-    internal_static_ir_mahmoud_iot_attendance_system_GetPresentEmployeeRequest_descriptor =
+        internal_static_ir_mahmoud_iot_attendance_system_EmployeePresenceStatusRequest_descriptor,
+        new String[] { "DeviceId", });
+    internal_static_ir_mahmoud_iot_attendance_system_EmployeePresenceStatusResponse_descriptor =
       getDescriptor().getMessageTypes().get(12);
-    internal_static_ir_mahmoud_iot_attendance_system_GetPresentEmployeeRequest_fieldAccessorTable = new
+    internal_static_ir_mahmoud_iot_attendance_system_EmployeePresenceStatusResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_ir_mahmoud_iot_attendance_system_GetPresentEmployeeRequest_descriptor,
-        new String[] { });
-    internal_static_ir_mahmoud_iot_attendance_system_GetPresentEmployeeResponse_descriptor =
-      getDescriptor().getMessageTypes().get(13);
-    internal_static_ir_mahmoud_iot_attendance_system_GetPresentEmployeeResponse_fieldAccessorTable = new
-      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_ir_mahmoud_iot_attendance_system_GetPresentEmployeeResponse_descriptor,
-        new String[] { "Employees", });
+        internal_static_ir_mahmoud_iot_attendance_system_EmployeePresenceStatusResponse_descriptor,
+        new String[] { "FirstName", "LastName", "IsPresent", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

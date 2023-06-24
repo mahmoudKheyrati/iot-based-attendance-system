@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.graphics.Color
 import android.util.Log
 import androidx.activity.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.example.iot_app.R
 
 import com.example.iot_app.databinding.MainActivityBinding
@@ -15,19 +14,14 @@ import com.example.iot_app.proto.LedColorRequest
 import com.example.iot_app.proto.LedColorResponse
 import com.example.iot_app.proto.OpenDoorRequest
 import com.example.iot_app.proto.OpenDoorResponse
+import com.example.iot_app.proto.attendanceSystemGrpc
 import com.example.iot_app.utils.CheckConnection
 import com.example.iot_app.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
-import java.io.Closeable
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-import com.example.iot_app.proto.attendanceSystemGrpc
-import dagger.hilt.android.HiltAndroidApp
 import io.grpc.stub.StreamObserver
-import kotlinx.coroutines.coroutineScope
 
 import java.net.Socket
 import java.net.InetSocketAddress
@@ -57,20 +51,7 @@ class MainActivity : AppCompatActivity() {
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //val ip = "192.168.43.2"
-        val port = 3498
 
-        var iplist = listOf("192.168.43.2", "172.23.0.1" ,"172.19.0.1" ,"172.18.0.1 ","172.17.0.1 ","172.20.0.1" ,"172.22.0.1 ","172.24.0.1 ","172.25.0.1")
-
-
-        for (ip in iplist){
-            if (checkConnectivity(ip, port)) {
-                Log.e("ylog","connect to "+ip)
-            } else {
-                // Connection failed, handle error
-                Log.e("ylog","not connect"+ip)
-            }
-        }
 
 
 
@@ -84,9 +65,10 @@ class MainActivity : AppCompatActivity() {
 
 
 
-        val stub  =attendanceSystemGrpc.newStub(channel)
+        val stub  = attendanceSystemGrpc.newStub(channel)
 
 
+        LedColorRequest.newBuilder().setDeviceId("d").build()
         stub.ledColor(LedColorRequest.newBuilder().setDeviceId("42564aa8-2119-4ad9-b430-5ad89d90bf75").build(),object :StreamObserver<LedColorResponse?>{
             override fun onNext(value: LedColorResponse?) {
 
@@ -126,7 +108,7 @@ class MainActivity : AppCompatActivity() {
 
             //Door
             btnOpenDoor.setOnClickListener {
-                stub.openDoor(OpenDoorRequest.newBuilder().setDeviceId("42564aa8-2119-4ad9-b430-5ad89d90bf75").build(),object : StreamObserver<OpenDoorResponse?>{
+                stub.openDoor(OpenDoorRequest.newBuilder().setDeviceId("42564aa8-2119-4ad9-b430-5ad89d90bf75").build(),object :StreamObserver<OpenDoorResponse?>{
                     override fun onNext(value: OpenDoorResponse?) {
 
                     }
@@ -140,6 +122,7 @@ class MainActivity : AppCompatActivity() {
                     }
 
                 })
+
 
             }
 
