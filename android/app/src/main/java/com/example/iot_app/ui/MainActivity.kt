@@ -3,13 +3,24 @@ package com.example.iot_app.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.graphics.Color
-import android.util.Log
+import android.graphics.Typeface
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.widget.TableLayout
+import android.widget.TableRow
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.example.iot_app.R
 
 import com.example.iot_app.databinding.MainActivityBinding
 import com.example.iot_app.proto.ChangeLedColorRequest
 import com.example.iot_app.proto.ChangeLedColorResponse
+import com.example.iot_app.proto.EmployeePresenceStatusRequest
+import com.example.iot_app.proto.EmployeePresenceStatusResponse
 import com.example.iot_app.proto.LedColorRequest
 import com.example.iot_app.proto.LedColorResponse
 import com.example.iot_app.proto.OpenDoorRequest
@@ -23,9 +34,6 @@ import javax.inject.Inject
 
 import io.grpc.stub.StreamObserver
 
-import java.net.Socket
-import java.net.InetSocketAddress
-
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -33,7 +41,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var binding: MainActivityBinding
 
-
+    val userStatus = HashMap<String, String>()
     private val viewModel:MainViewModel by viewModels()
 
 
@@ -46,33 +54,45 @@ class MainActivity : AppCompatActivity() {
     var BLUE_BUTTON_CLICKED = false
 
 
+    // create a new MutableLiveData object
+    val roomLiveData = MutableLiveData<Map<String, String>>()
+
+// observe changes to the LiveData and update the TextView
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = MainActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
 
+        checkInternetConnection()
+
+
+        roomLiveData.observe(this, Observer { dict ->
+            binding.logText.setText("")
+            for((key,value )in dict){
+                if(value=="true"){
+                    binding.logText.append(key+"\n")
+                }
+
+            }
+        })
 
 
 
-
-
-
-
+        //grpc settings
         val channel = ManagedChannelBuilder.forAddress("192.168.43.2", 3498)
             .usePlaintext()
             .build()
 
-
-
         val stub  = attendanceSystemGrpc.newStub(channel)
 
 
-        LedColorRequest.newBuilder().setDeviceId("d").build()
+        //led color response observer
         stub.ledColor(LedColorRequest.newBuilder().setDeviceId("42564aa8-2119-4ad9-b430-5ad89d90bf75").build(),object :StreamObserver<LedColorResponse?>{
             override fun onNext(value: LedColorResponse?) {
-
-
 
                     var r = value!!.red*255
                     var g = value!!.green*255
@@ -81,54 +101,58 @@ class MainActivity : AppCompatActivity() {
                         currentLightColor.setBackgroundColor(Color.argb(255,r,g,b) )
                     }
 
-
-
             }
 
             override fun onError(t: Throwable?) {
 
-                print("")
             }
 
             override fun onCompleted() {
 
-                print("")
             }
 
         })
 
+        stub.employeesPresenceStatus(EmployeePresenceStatusRequest.newBuilder().setDeviceId("42564aa8-2119-4ad9-b430-5ad89d90bf75").build(),object :StreamObserver<EmployeePresenceStatusResponse?>{
+            override fun onNext(value: EmployeePresenceStatusResponse?) {
+
+                val v = value!!
+                var fullName = v.firstName+" "+v.lastName
+                userStatus.put(fullName, v.isPresent.toString())
+                roomLiveData.postValue(userStatus)
 
 
 
 
-
-
-
-        binding.apply {
-
-            //Door
-            btnOpenDoor.setOnClickListener {
-                stub.openDoor(OpenDoorRequest.newBuilder().setDeviceId("42564aa8-2119-4ad9-b430-5ad89d90bf75").build(),object :StreamObserver<OpenDoorResponse?>{
-                    override fun onNext(value: OpenDoorResponse?) {
-
-                    }
-
-                    override fun onError(t: Throwable?) {
-
-                    }
-
-                    override fun onCompleted() {
-
-                    }
-
-                })
-
+        }
+            override fun onError(t: Throwable?) {
 
             }
 
+            override fun onCompleted() {
+
+            }
+
+        })
+
+        
+        binding.apply {
+
+            //open door request
+            btnOpenDoor.setOnClickListener {
+                stub.openDoor(OpenDoorRequest.newBuilder().setDeviceId("42564aa8-2119-4ad9-b430-5ad89d90bf75").build(),object :StreamObserver<OpenDoorResponse?>{
+                    override fun onNext(value: OpenDoorResponse?) {
+                    }
+
+                    override fun onError(t: Throwable?) {
+                    }
+
+                    override fun onCompleted() {
+                    }
+                })
+            }
 
             //RGB Light
-
             //RED
             btnRedLight.run {
                 setOnClickListener {
@@ -138,12 +162,10 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         setBackgroundResource(R.drawable.bg_button_red_onclick)
                         true
-
                     }
                     setFinalLightColor()
                 }
             }
-
             //GREEN
             btnGreenLight.run {
                 setOnClickListener {
@@ -153,18 +175,13 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         setBackgroundResource(R.drawable.bg_button_green_onclick)
                         true
-
                     }
                     setFinalLightColor()
                 }
             }
-
             //BLUE
             btnBlueLight.run {
                 setOnClickListener {
-
-
-
                     BLUE_BUTTON_CLICKED = if(BLUE_BUTTON_CLICKED){
                         setBackgroundResource(R.drawable.bg_button_blue_light)
                         false
@@ -178,30 +195,22 @@ class MainActivity : AppCompatActivity() {
             }
 
 
+
             btnSetLightColor.run {
                 setOnClickListener {
-                    //checkConnectionAndSendRequest()
-
 
                     var r = if(RED_BUTTON_CLICKED) 1 else 0
                     var g = if(GREEN_BUTTON_CLICKED) 1 else 0
                     var b = if(BLUE_BUTTON_CLICKED) 1 else 0
 
-
+                    //change led color request
                     stub.changeLedColor(
                         ChangeLedColorRequest.newBuilder().setRed(r).setGreen(g).setBlue(b).setDeviceId("42564aa8-2119-4ad9-b430-5ad89d90bf75").build(), object : StreamObserver<ChangeLedColorResponse?> {
                             override fun onNext(value: ChangeLedColorResponse?) {
-                                print("")
-
                             }
-
                             override fun onError(t: Throwable?) {
-                                Log.e("yyy",t?.message.toString())
-
                             }
-
                             override fun onCompleted() {
-                                print("")
                             }
                         }
                     )
@@ -210,14 +219,21 @@ class MainActivity : AppCompatActivity() {
             }
 
 
+
+
         }
 
 
     }
 
-    private fun checkConnectionAndSendRequest() {
+    private fun checkInternetConnection() {
         connection.observe(this){
-            //grpc codes
+            if(!it){
+                Toast.makeText(this,"Check Your Internet Connection!",Toast.LENGTH_SHORT).show()
+            }
+            else{
+                Toast.makeText(this,"Network Connected",Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -230,27 +246,6 @@ class MainActivity : AppCompatActivity() {
             btnSetLightColor.setBackgroundColor(Color.argb(255,r,g,b) )
         }
     }
-
-
-
-    fun checkConnectivity(ip: String, port: Int): Boolean {
-
-        return try {
-            val socket = Socket()
-            socket.connect(InetSocketAddress(ip, port), 5000) // 5000ms timeout
-            socket.close()
-            true
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-
-
-
-
-
-
 
 
 }
