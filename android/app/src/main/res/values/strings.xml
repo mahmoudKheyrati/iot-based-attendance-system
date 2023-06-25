@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">YAM-IOT</string>
+    <string name="title_activity_splash">SplashActivity</string>
+
+    <string name="lorem_ipsum">
+        Door    opened at 200123034\n
+        LED     change color to RG\n
+        Door    opened by admin\n
+        Door    opened at 200123034\n
+        LED     change color to BG\n
+        LED     change color to RG\n
+        Door    opened at 200123034\n
+        Door    opened at 200123034\n
+        Door    opened by admin\n
+        Door    opened at 200123034\n
+        Door    opened at 200123034
+
+
+    </string>
+</resources>
