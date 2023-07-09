@@ -1,6 +1,6 @@
 # iot-based-attendance-system
 
-## 😎 Team
+## 😎 Team Members
 - Mahmoud Kheyrati Fard
 - Yasin Rezaei
 - Alireza Lotfi
