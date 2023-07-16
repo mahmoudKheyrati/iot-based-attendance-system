@@ -55,13 +55,28 @@ create table if not exists attendance_system.employee
     primary key ( card_uid )
 );
 insert into attendance_system.employee(card_uid, email, first_name, last_name, phone_number, rules)
-VALUES ('291F9630', 'mahmoud.kheyrati.fard@gmail.com', 'mahmoud reza', 'kheyrati fard', '+989384892109',
+VALUES ('CA1B5FA3', 'mahmoud.kheyrati.fard@gmail.com', 'MahmoudReza', 'KheyratiFard', '+989384892109',
         {'42564aa8-2119-4ad9-b430-5ad89d90bf75'});
+
 insert into attendance_system.employee(card_uid, email, first_name, last_name, phone_number, rules)
-VALUES ('F9BFFB30', 'yasinrezaie@gmail.com', 'yasin', 'rezaie', '+9898888888',
+VALUES ('291F9630', 'mahmoudKheyrati@gmail.com', 'MahmoudReza', 'KheyratiFard', '+989925136188',
         {'42564aa8-2119-4ad9-b430-5ad89d90bf75'});
+
 insert into attendance_system.employee(card_uid, email, first_name, last_name, phone_number, rules)
-VALUES ('39AE9530', 'arlotfi79@gmail.com', 'alireza', 'lotfi', '+9890000000', {});
+VALUES ('9C1E2E8F', 'yasinrezaie@gmail.com', 'Yasin', 'Rezaei', '+9898888888',
+        {'42564aa8-2119-4ad9-b430-5ad89d90bf75'});
+
+insert into attendance_system.employee(card_uid, email, first_name, last_name, phone_number, rules)
+VALUES ('F9BFFB30', 'yasinrezaie@gmail.com', 'Yasin', 'Rezaei', '+989162833195',
+        {'42564aa8-2119-4ad9-b430-5ad89d90bf75'});
+
+insert into attendance_system.employee(card_uid, email, first_name, last_name, phone_number, rules)
+VALUES ('39AE9530', 'arlotfi79@gmail.com', 'Alireza', 'Lotfi', '+9890000000', {});
+
+insert into attendance_system.employee(card_uid, email, first_name, last_name, phone_number, rules)
+VALUES ('E961814A', 'maher@gmail.com', 'ali', 'maher', '+9890000000', {});
+insert into attendance_system.employee(card_uid, email, first_name, last_name, phone_number, rules)
+VALUES ('D92FB02A', 'sogol@gmail.com', 'sogol', 'bazrafshan', '+9890000000', {'42564aa8-2119-4ad9-b430-5ad89d90bf75'});
 
 create table if not exists attendance_system.attendance_log
 (
