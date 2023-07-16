@@ -26,11 +26,11 @@ namespace RELAY {
     }
 
     void open() {
-        digitalWrite(RELAY_PIN, 0);
+        digitalWrite(RELAY_PIN, 1);
         state = true;
     }
     void close() {
-        digitalWrite(RELAY_PIN, 1);
+        digitalWrite(RELAY_PIN, 0);
         state = false;
     }
 

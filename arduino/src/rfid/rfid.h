@@ -5,7 +5,7 @@
 #include <MFRC522.h>
 
 namespace RFID {
-    const int RST_PIN = 16;          // Configurable, see typical pin layout above
+    const int RST_PIN = 17;          // Configurable, see typical pin layout above
     const int SS_PIN = 5;        // Configurable, see typical pin layout above
 
     MFRC522 mfrc522(SS_PIN, RST_PIN);   // Create MFRC522 instance
