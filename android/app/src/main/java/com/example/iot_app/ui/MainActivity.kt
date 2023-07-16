@@ -3,15 +3,7 @@ package com.example.iot_app.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.graphics.Color
-import android.graphics.Typeface
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
-import android.widget.TableLayout
-import android.widget.TableRow
-import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.example.iot_app.R
@@ -27,7 +19,7 @@ import com.example.iot_app.proto.OpenDoorRequest
 import com.example.iot_app.proto.OpenDoorResponse
 import com.example.iot_app.proto.attendanceSystemGrpc
 import com.example.iot_app.utils.CheckConnection
-import com.example.iot_app.viewmodel.MainViewModel
+import com.example.iot_app.utils.Constants.DEVICE_ID
 import dagger.hilt.android.AndroidEntryPoint
 import io.grpc.ManagedChannelBuilder
 import javax.inject.Inject
@@ -42,8 +34,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: MainActivityBinding
 
     val userStatus = HashMap<String, String>()
-    private val viewModel:MainViewModel by viewModels()
-
 
     @Inject
     lateinit var connection:CheckConnection
@@ -56,9 +46,6 @@ class MainActivity : AppCompatActivity() {
 
     // create a new MutableLiveData object
     val roomLiveData = MutableLiveData<Map<String, String>>()
-
-// observe changes to the LiveData and update the TextView
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,7 +100,7 @@ class MainActivity : AppCompatActivity() {
 
         })
 
-        stub.employeesPresenceStatus(EmployeePresenceStatusRequest.newBuilder().setDeviceId("42564aa8-2119-4ad9-b430-5ad89d90bf75").build(),object :StreamObserver<EmployeePresenceStatusResponse?>{
+        stub.employeesPresenceStatus(EmployeePresenceStatusRequest.newBuilder().setDeviceId(DEVICE_ID).build(),object :StreamObserver<EmployeePresenceStatusResponse?>{
             override fun onNext(value: EmployeePresenceStatusResponse?) {
 
                 val v = value!!
@@ -140,7 +127,7 @@ class MainActivity : AppCompatActivity() {
 
             //open door request
             btnOpenDoor.setOnClickListener {
-                stub.openDoor(OpenDoorRequest.newBuilder().setDeviceId("42564aa8-2119-4ad9-b430-5ad89d90bf75").build(),object :StreamObserver<OpenDoorResponse?>{
+                stub.openDoor(OpenDoorRequest.newBuilder().setDeviceId(DEVICE_ID).build(),object :StreamObserver<OpenDoorResponse?>{
                     override fun onNext(value: OpenDoorResponse?) {
                     }
 
@@ -205,7 +192,8 @@ class MainActivity : AppCompatActivity() {
 
                     //change led color request
                     stub.changeLedColor(
-                        ChangeLedColorRequest.newBuilder().setRed(r).setGreen(g).setBlue(b).setDeviceId("42564aa8-2119-4ad9-b430-5ad89d90bf75").build(), object : StreamObserver<ChangeLedColorResponse?> {
+                        ChangeLedColorRequest.newBuilder().setRed(r).setGreen(g).setBlue(b).setDeviceId(
+                            DEVICE_ID).build(), object : StreamObserver<ChangeLedColorResponse?> {
                             override fun onNext(value: ChangeLedColorResponse?) {
                             }
                             override fun onError(t: Throwable?) {
