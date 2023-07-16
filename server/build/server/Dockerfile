@@ -10,5 +10,7 @@ FROM  golang:1.20
 RUN mkdir -p /application
 WORKDIR /application
 COPY --from=builder /build/server ./
+COPY --from=builder /application/config.yaml ./
+COPY --from=builder /application/.env ./
 ENTRYPOINT ["./server"]
 
